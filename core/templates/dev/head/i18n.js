@@ -48,7 +48,7 @@ oppia.controller('I18nFooter', [
       $translate.use(GLOBALS.preferredSiteLanguageCode);
     }
     else{
-      $translate.use("zh-hans");
+      $translate.use('zh-hans');
     }
 
     // The $timeout seems to be necessary for the dropdown to show anything
