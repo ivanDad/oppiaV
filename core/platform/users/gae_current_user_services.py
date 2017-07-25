@@ -82,3 +82,7 @@ def get_user_id(user):
 def get_user_email(user):
     """ Given an user object, get the user's email. """
     return user.email()
+
+def get_user_password(user):
+    """ Given an user object, get the user's password. """
+    return user.password()

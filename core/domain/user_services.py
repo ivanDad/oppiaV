@@ -464,7 +464,7 @@ def get_profile_pictures_by_user_ids(user_ids):
     return result
 
 
-def get_user_settings(user_id, strict=False):
+def get_user_settings(user_id, strict=False, password=None):
     """Return the user settings for a single user.
 
     Args:
@@ -526,6 +526,7 @@ def _save_user_settings(user_settings):
     user_models.UserSettingsModel(
         id=user_settings.user_id,
         email=user_settings.email,
+        password=user_settings.password,
         role=user_settings.role,
         username=user_settings.username,
         normalized_username=user_settings.normalized_username,
@@ -592,7 +593,7 @@ def has_fully_registered(user_id):
         feconf.REGISTRATION_PAGE_LAST_UPDATED_UTC)
 
 
-def create_new_user(user_id, email):
+def create_new_user(user_id, email, password=None):
     """Creates a new user.
 
     Args:
@@ -610,7 +611,7 @@ def create_new_user(user_id, email):
         raise Exception('User %s already exists.' % user_id)
 
     user_settings = UserSettings(
-        user_id, email, feconf.ROLE_ID_EXPLORATION_EDITOR,
+        user_id, email, feconf.ROLE_ID_EXPLORATION_EDITOR, password,
         preferred_language_codes=[feconf.DEFAULT_LANGUAGE_CODE])
     _save_user_settings(user_settings)
     create_user_contributions(user_id, [], [])

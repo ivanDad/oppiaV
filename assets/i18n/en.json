@@ -452,8 +452,58 @@
     "I18N_TOPNAV_NOTIFICATIONS": "Notifications",
     "I18N_TOPNAV_PREFERENCES": "Preferences",
     "I18N_TOPNAV_SIGN_IN": "Sign in",
-    "I18N_TOPNAV_SIGN_IN_WITH_GOOGLE": "Sign in with Google",
+    "I18N_TOPNAV_SIGN_IN_WITH_GOOGLE": "Sign in with Email",
     "I18N_TOPNAV_TEACH_WITH_OPPIA": "Teach with Oppia",
     "I18N_TOTAL_SUBSCRIBERS_TEXT": "You have a total of <[totalSubscribers]> subscribers.",
-    "I18N_UNSUBSCRIBE_BUTTON_TEXT": "Unsubscribe"
+    "I18N_UNSUBSCRIBE_BUTTON_TEXT": "Unsubscribe",
+
+
+
+
+
+
+
+    "I18N_OPPIA_DEV_MODE": "DEV_MODE",
+    "I18N_OPPIA_WELCOME_H1": "Welcome!",
+    "I18N_OPPIA_WELCOME_P_1": "It looks like you're new to creating explorations.",
+    "I18N_OPPIA_WELCOME_P_2": "Would you like an introduction to creating in Oppia?",
+    "I18N_OPPIA_WELCOME_BUTTON_YES": "Yes, please!",
+    "I18N_OPPIA_WELCOME_BUTTON_NOPE": "Nope, take me to the editor",
+    "I18N_STATE_EDITOR_CONTENT_SPAN_1": "This is the first card of your exploration. Use this space to introduce your topic and engage the learner, then ask them a question.",
+    "I18N_STATE_EDITOR_CONTENT_SPAN_2": "You can speak to the learner here, then ask them a question.",
+    "I18N_STATE_EDITOR_CONTENT_BUTTON_1": "Save Content",
+    "I18N_STATE_EDITOR_CONTENT_BUTTON_2": "Cancel",
+    "I18N_STATE_EDITOR_INTERACTION_1": "+ Add Interaction / End Exploration",
+    "I18N_STATE_EDITOR_INTERACTION_2": "Choose Interaction",
+    "I18N_STATE_EDITOR_INTERACTION_3": "Customize Interaction",
+    "I18N_STATE_EDITOR_INTERACTION_4": "This interaction cannot be modified. To delete it, close this popup and click the 'x' button in the top-right corner.",
+    "I18N_STATE_EDITOR_INTERACTION_5": "Change Interaction",
+    "I18N_STATE_EDITOR_INTERACTION_6": "Save Interaction",
+    "I18N_STATE_EDITOR_INTERACTION_7": "Okay",
+    "I18N_STATE_EDITOR_INTERACTION_8": "Delete Interaction",
+    "I18N_STATE_EDITOR_INTERACTION_9": "Are you sure you want to delete this interaction? This will also clear all its responses.",
+    "I18N_STATE_EDITOR_INTERACTION_CANCEL": "Cancel",
+    "I18N_EDITOR_NAVBAR_BREADCRUMB_DIRECTIVE_TITLE": "Untitled Exploration",
+    "I18N_EDITOR_NAVBAR_BREADCRUMB_DIRECTIVE_LOADING": "Loading...",
+    "I18N_EXPLORATION_SAVE_AND_PUBLISH_BUTTONS_DIRECTIVE_1": "Publish",
+    "I18N_EXPLORATION_SAVE_AND_PUBLISH_BUTTONS_DIRECTIVE_2": "Publishing",
+    "I18N_EXPLORATION_SAVE_AND_PUBLISH_BUTTONS_DIRECTIVE_3": "Save Draft",
+    "I18N_EXPLORATION_SAVE_AND_PUBLISH_BUTTONS_DIRECTIVE_4": "Publish Changes",
+    "I18N_EXPLORATION_SAVE_AND_PUBLISH_BUTTONS_DIRECTIVE_5": "Saving",
+    "I18N_EXPLORATION_SAVE_AND_PUBLISH_BUTTONS_DIRECTIVE_6": "Publishing",
+    "I18N_EXPLORATION_SAVE_AND_PUBLISH_BUTTONS_DIRECTIVE_7": "Discard Draft",
+    "I18N_EXPLORATION_SAVE_AND_PUBLISH_BUTTONS_DIRECTIVE_8": "Confirmation Required",
+    "I18N_EXPLORATION_SAVE_AND_PUBLISH_BUTTONS_DIRECTIVE_9": "Are you sure you want to discard the changes?",
+    "I18N_EXPLORATION_SAVE_AND_PUBLISH_BUTTONS_DIRECTIVE_10": "Cancel",
+    "I18N_EXPLORATION_SAVE_AND_PUBLISH_BUTTONS_DIRECTIVE_11": "Discard Changes",
+    "I18N_EXPLORATION_SAVE_MODAL_DIRECTIVE_1": "Save Draft",
+    "I18N_EXPLORATION_SAVE_MODAL_DIRECTIVE_2": "Publish Changes",
+    "I18N_EXPLORATION_SAVE_MODAL_DIRECTIVE_3": "Please enter a brief description of what you have changed:",
+    "I18N_EXPLORATION_SAVE_MODAL_DIRECTIVE_4": "(Optional)",
+    "I18N_EXPLORATION_SAVE_MODAL_DIRECTIVE_5": "Show Changes",
+    "I18N_EXPLORATION_SAVE_MODAL_DIRECTIVE_6": "Hide Changes",
+    "I18N_EXPLORATION_SAVE_MODAL_DIRECTIVE_7": "Cancel",
+    "I18N_EXPLORATION_SAVE_MODAL_DIRECTIVE_8": "Save Draft",
+    "I18N_EXPLORATION_SAVE_MODAL_DIRECTIVE_9": "Publish Changes"
+
 }

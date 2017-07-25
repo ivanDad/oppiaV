@@ -366,7 +366,7 @@ DASHBOARD_STATS_DATETIME_STRING_FORMAT = '%Y-%m-%d'
 MAX_FILE_SIZE_BYTES = 1048576
 
 # The default language code for an exploration.
-DEFAULT_LANGUAGE_CODE = 'en'
+DEFAULT_LANGUAGE_CODE = 'zh'
 
 # The id of the default skin.
 # TODO(sll): Deprecate this; it is no longer used.
@@ -773,81 +773,9 @@ LIBRARY_PAGE_MODE_SEARCH = 'search'
 # parenthetical part that may be stripped out to give a shorter
 # description.
 ALL_LANGUAGE_CODES = [{
-    'code': 'en', 'description': u'English',
-}, {
-    'code': 'ar', 'description': u'العربية (Arabic)',
-}, {
-    'code': 'bg', 'description': u'български (Bulgarian)',
-}, {
-    'code': 'ca', 'description': u'català (Catalan)',
-}, {
     'code': 'zh', 'description': u'中文 (Chinese)',
 }, {
-    'code': 'hr', 'description': u'hrvatski (Croatian)',
-}, {
-    'code': 'cs', 'description': u'čeština (Czech)',
-}, {
-    'code': 'da', 'description': u'dansk (Danish)',
-}, {
-    'code': 'nl', 'description': u'Nederlands (Dutch)',
-}, {
-    'code': 'tl', 'description': u'Filipino (Filipino)',
-}, {
-    'code': 'fi', 'description': u'suomi (Finnish)',
-}, {
-    'code': 'fr', 'description': u'français (French)',
-}, {
-    'code': 'de', 'description': u'Deutsch (German)',
-}, {
-    'code': 'el', 'description': u'ελληνικά (Greek)',
-}, {
-    'code': 'he', 'description': u'עברית (Hebrew)',
-}, {
-    'code': 'hi', 'description': u'हिन्दी (Hindi)',
-}, {
-    'code': 'hu', 'description': u'magyar (Hungarian)',
-}, {
-    'code': 'id', 'description': u'Bahasa Indonesia (Indonesian)',
-}, {
-    'code': 'it', 'description': u'italiano (Italian)',
-}, {
-    'code': 'ja', 'description': u'日本語 (Japanese)',
-}, {
-    'code': 'ko', 'description': u'한국어 (Korean)',
-}, {
-    'code': 'lv', 'description': u'latviešu (Latvian)',
-}, {
-    'code': 'lt', 'description': u'lietuvių (Lithuanian)',
-}, {
-    'code': 'no', 'description': u'Norsk (Norwegian)',
-}, {
-    'code': 'fa', 'description': u'فارسی (Persian)',
-}, {
-    'code': 'pl', 'description': u'polski (Polish)',
-}, {
-    'code': 'pt', 'description': u'português (Portuguese)',
-}, {
-    'code': 'ro', 'description': u'română (Romanian)',
-}, {
-    'code': 'ru', 'description': u'русский (Russian)',
-}, {
-    'code': 'sr', 'description': u'српски (Serbian)',
-}, {
-    'code': 'sk', 'description': u'slovenčina (Slovak)',
-}, {
-    'code': 'sl', 'description': u'slovenščina (Slovenian)',
-}, {
-    'code': 'es', 'description': u'español (Spanish)',
-}, {
-    'code': 'sv', 'description': u'svenska (Swedish)',
-}, {
-    'code': 'th', 'description': u'ภาษาไทย (Thai)',
-}, {
-    'code': 'tr', 'description': u'Türkçe (Turkish)',
-}, {
-    'code': 'uk', 'description': u'українська (Ukrainian)',
-}, {
-    'code': 'vi', 'description': u'Tiếng Việt (Vietnamese)',
+    'code': 'en', 'description': u'English',
 }]
 
 # Defaults for topic similarities
@@ -857,53 +785,11 @@ SAME_TOPIC_SIMILARITY = 1.0
 # NOTE TO DEVELOPERS: While adding another language, please ensure that the
 # languages are in alphabetical order.
 SUPPORTED_SITE_LANGUAGES = [{
-    'id': 'id',
-    'text': 'Bahasa Indonesia'
-}, {
-    'id': 'en',
-    'text': 'English'
-}, {
-    'id': 'de',
-    'text': 'Deutsch'
-}, {
-    'id': 'fr',
-    'text': 'français'
-}, {
-    'id': 'nl',
-    'text': 'Nederlands'
-}, {
-    'id': 'es',
-    'text': 'Español'
-}, {
-    'id': 'hu',
-    'text': 'magyar'
-}, {
-    'id': 'pt',
-    'text': 'Português'
-}, {
-    'id': 'pt-br',
-    'text': 'Português (Brasil)'
-}, {
-    'id': 'mk',
-    'text': 'македонски јазик'
-}, {
-    'id': 'vi',
-    'text': 'Tiếng Việt'
-}, {
-    'id': 'hi',
-    'text': 'हिन्दी'
-}, {
-    'id': 'bn',
-    'text': 'বাংলা'
-}, {
-    'id': 'tr',
-    'text': 'Türkçe'
-}, {
     'id': 'zh-hans',
     'text': '中文(简体)'
 }, {
-    'id': 'zh-hant',
-    'text': '中文(繁體)'
+    'id': 'en',
+    'text': 'English'
 }]
 SYSTEM_USERNAMES = [SYSTEM_COMMITTER_ID, MIGRATION_BOT_USERNAME]
 SYSTEM_USER_IDS = [SYSTEM_COMMITTER_ID, MIGRATION_BOT_USERNAME]

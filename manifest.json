@@ -76,7 +76,7 @@
       "angular": {
         "version": "1.5.8",
         "downloadFormat": "files",
-        "url": "https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8",
+        "url": "https://code.angularjs.org/1.5.8",
         "targetDirPrefix": "angularjs-",
         "files": [
           "angular.js", "angular.min.js", "angular.min.js.map", "angular-animate.js",
@@ -175,7 +175,7 @@
       "bootstrap": {
         "version": "3.3.4",
         "downloadFormat": "zip",
-        "url": "https://github.com/twbs/bootstrap/releases/download/v3.3.4/bootstrap-3.3.4-dist.zip",
+        "url": "http://static.vixue.com/js/bootstrap-3.3.4-dist.zip",
         "rootDir": "bootstrap-3.3.4-dist",
         "targetDirPrefix": "bootstrap-",
         "bundle": {
@@ -255,9 +255,9 @@
         }
       },
       "jquery": {
-        "version": "3.0.0",
+        "version": "3.2.0",
         "downloadFormat": "files",
-        "url": "https://ajax.googleapis.com/ajax/libs/jquery/3.0.0",
+        "url": "http://static.vixue.com/js/jquery/3.2.0",
         "rootDirPrefix": "jquery-",
         "targetDirPrefix": "jquery-",
         "files": ["jquery.js", "jquery.min.js", "jquery.min.js.map"],
@@ -268,7 +268,7 @@
       "jqueryUI": {
         "version": "1.10.3",
         "downloadFormat": "files",
-        "url": "https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3",
+        "url": "http://code.jquery.com/ui/1.10.3",
         "rootDirPrefix": "jqueryui-",
         "targetDirPrefix": "jqueryui-",
         "files": ["jquery-ui.min.js"],

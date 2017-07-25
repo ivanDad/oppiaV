@@ -184,19 +184,21 @@ class BaseHandler(webapp2.RequestHandler):
         self.user = current_user_services.get_current_user()
         self.user_id = current_user_services.get_user_id(
             self.user) if self.user else None
+        self.password = current_user_services.get_user_password(
+            self.user) if self.user else None
         self.username = None
         self.has_seen_editor_tutorial = False
         self.partially_logged_in = False
         self.values['profile_picture_data_url'] = None
-        self.preferred_site_language_code = None
+        self.preferred_site_language_code = "zh-hans"
 
         if self.user_id:
             user_settings = user_services.get_user_settings(
-                self.user_id, strict=False)
+                self.user_id, strict=False, password=self.password)
             if user_settings is None:
                 email = current_user_services.get_user_email(self.user)
                 user_settings = user_services.create_new_user(
-                    self.user_id, email)
+                    self.user_id, email, self.password)
 
             self.values['user_email'] = user_settings.email
 

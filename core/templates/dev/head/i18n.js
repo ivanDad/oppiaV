@@ -47,6 +47,9 @@ oppia.controller('I18nFooter', [
     if (GLOBALS.userIsLoggedIn && GLOBALS.preferredSiteLanguageCode) {
       $translate.use(GLOBALS.preferredSiteLanguageCode);
     }
+    else{
+      $translate.use("zh-hans");
+    }
 
     // The $timeout seems to be necessary for the dropdown to show anything
     // at the outset, if the default language is not English.

@@ -46,7 +46,7 @@
           <li><a class="protractor-test-contact-link oppia-navbar-tab-content" href="/contact" translate="I18N_TOPNAV_CONTACT_US"></a></li>
         </ul>
       </li>
-      <li ng-show="navElementsVisibilityStatus.I18N_TOPNAV_DONATE">
+      <li ng-show="navElementsVisibilityStatus.I18N_TOPNAV_DONATE" style="display:none;">
         <div class="oppia-navbar-button-container">
           <a href="/donate"
              class="btn oppia-navbar-button oppia-navbar-hide-on-small-width oppia-transition-200">
@@ -164,7 +164,7 @@
         <li>
           <a href style="padding: 0; width: 200px;" ng-click="onLoginButtonClicked()">
             <div class="oppia-signin-google">
-              <i class="oppia-signin-google-icon fa fa-google-plus"></i>
+              <i class="oppia-signin-google-icon fa fa-envelope-o"></i>
               <div class="oppia-signin-google-separator"></div>
               <b><span translate="I18N_TOPNAV_SIGN_IN_WITH_GOOGLE"></span></b>
             </div>
@@ -187,7 +187,7 @@
     margin: 3px 3px 3px;
     padding: 9px;
   }
-  top-navigation-bar .oppia-signin-google i.oppia-signin-google-icon.fa.fa-google-plus {
+  top-navigation-bar .oppia-signin-google i.oppia-signin-google-icon.fa.fa-envelope-o {
     font-size: 22px;
     margin-right: 25.5px;
     padding-right: 3px;
