@@ -464,7 +464,7 @@ def get_profile_pictures_by_user_ids(user_ids):
     return result
 
 
-def get_user_settings(user_id, strict=False, password=None):
+def get_user_settings(user_id, strict=False):
     """Return the user settings for a single user.
 
     Args:
