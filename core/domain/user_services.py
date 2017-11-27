@@ -22,6 +22,7 @@ import imghdr
 import logging
 import re
 
+from constants import constants
 from core.platform import models
 from core.domain import user_domain
 from core.domain import role_services
@@ -62,6 +63,7 @@ class UserSettings(object):
             last edited an exploration.
         profile_picture_data_url: str or None. User uploaded profile picture as
             a dataURI string.
+        default_dashboard: str or None. The default dashboard of the user.
         user_bio: str. User-specified biography.
         subject_interests: list(str) or None. Subject interests specified by
             the user.
@@ -70,15 +72,19 @@ class UserSettings(object):
         preferred_language_codes: list(str) or None. Exploration language
             preferences specified by the user.
         preferred_site_language_code: str or None. System language preference.
+        preferred_audio_language_code: str or None. Audio language preference.
     """
     def __init__(
-            self, user_id, email, role, username=None,
+            self, user_id, email, role, password=None, username=None,
             last_agreed_to_terms=None, last_started_state_editor_tutorial=None,
             last_logged_in=None, last_created_an_exploration=None,
             last_edited_an_exploration=None, profile_picture_data_url=None,
+            default_dashboard=None,
+            creator_dashboard_display_pref=(
+                constants.ALLOWED_CREATOR_DASHBOARD_DISPLAY_PREFS['CARD']),
             user_bio='', subject_interests=None, first_contribution_msec=None,
-            preferred_language_codes=None, preferred_site_language_code=None
-    ):
+            preferred_language_codes=None, preferred_site_language_code=None,
+            preferred_audio_language_code=None):
         """Constructs a UserSettings domain object.
 
         Args:
@@ -108,10 +114,13 @@ class UserSettings(object):
                 preferences specified by the user.
             preferred_site_language_code: str or None. System language
                 preference.
+            preferred_audio_language_code: str or None. Default language used
+                for audio translations preference.
         """
         self.user_id = user_id
         self.email = email
         self.role = role
+        self.password = password
         self.username = username
         self.last_agreed_to_terms = last_agreed_to_terms
         self.last_started_state_editor_tutorial = (  # pylint: disable=invalid-name
@@ -120,6 +129,8 @@ class UserSettings(object):
         self.last_edited_an_exploration = last_edited_an_exploration
         self.last_created_an_exploration = last_created_an_exploration
         self.profile_picture_data_url = profile_picture_data_url
+        self.default_dashboard = default_dashboard
+        self.creator_dashboard_display_pref = creator_dashboard_display_pref
         self.user_bio = user_bio
         self.subject_interests = (
             subject_interests if subject_interests else [])
@@ -127,6 +138,7 @@ class UserSettings(object):
         self.preferred_language_codes = (
             preferred_language_codes if preferred_language_codes else [])
         self.preferred_site_language_code = preferred_site_language_code
+        self.preferred_audio_language_code = preferred_audio_language_code
 
     def validate(self):
         """Checks that user_id and email fields of this UserSettings domain
@@ -160,6 +172,16 @@ class UserSettings(object):
                 'Expected role to be a string, received %s' % self.role)
         if self.role not in role_services.PARENT_ROLES:
             raise utils.ValidationError('Role %s does not exist.' % self.role)
+
+        if not isinstance(self.creator_dashboard_display_pref, basestring):
+            raise utils.ValidationError(
+                'Expected dashboard display preference to be a string, '
+                'received %s' % self.creator_dashboard_display_pref)
+        if (self.creator_dashboard_display_pref not in
+                constants.ALLOWED_CREATOR_DASHBOARD_DISPLAY_PREFS.values()):
+            raise utils.ValidationError(
+                '%s is not a valid value for the dashboard display '
+                'preferences.' % (self.creator_dashboard_display_pref))
 
     @property
     def truncated_email(self):
@@ -371,12 +393,17 @@ def get_users_settings(user_ids):
                 last_created_an_exploration=(
                     model.last_created_an_exploration),
                 profile_picture_data_url=model.profile_picture_data_url,
+                default_dashboard=model.default_dashboard,
+                creator_dashboard_display_pref=(
+                    model.creator_dashboard_display_pref),
                 user_bio=model.user_bio,
                 subject_interests=model.subject_interests,
                 first_contribution_msec=model.first_contribution_msec,
                 preferred_language_codes=model.preferred_language_codes,
                 preferred_site_language_code=(
-                    model.preferred_site_language_code)
+                    model.preferred_site_language_code),
+                preferred_audio_language_code=(
+                    model.preferred_audio_language_code)
             ))
         else:
             result.append(None)
@@ -497,23 +524,62 @@ def get_user_role_from_id(user_id):
     Returns:
         str. Role of the user with given id.
     """
-    user_settings = get_user_settings(user_id)
+    user_settings = get_user_settings(user_id, strict=False)
     if user_settings is None:
         return feconf.ROLE_ID_GUEST
     return user_settings.role
 
 
 def get_usernames_by_role(role):
-    """Get usernames of all the users with given role Id.
+    """Get usernames of all the users with given role ID.
 
     Args:
-        role: str. The role Id of users requested.
+        role: str. The role ID of users requested.
 
     Returns:
-        list(str). List of usernames of users with given role Id.
+        list(str). List of usernames of users with given role ID.
     """
     user_settings = user_models.UserSettingsModel.get_by_role(role)
     return [user.username for user in user_settings]
+
+
+def get_user_ids_by_role(role):
+    """Get user ids of all the users with given role ID.
+
+    Args:
+        role: str. The role ID of users requested.
+
+    Returns:
+        list(str). List of user ids of users with given role ID.
+    """
+    user_settings = user_models.UserSettingsModel.get_by_role(role)
+    return [user.id for user in user_settings]
+
+
+class UserActionsInfo(object):
+
+    def __init__(self, user_id=None):
+        self._user_id = user_id
+        self._role = get_user_role_from_id(user_id)
+        self._actions = role_services.get_all_actions(self._role)
+
+    @property
+    def user_id(self):
+        return self._user_id
+
+    @property
+    def role(self):
+        return self._role
+
+    @property
+    def actions(self):
+        return self._actions
+
+
+def get_system_user():
+    """Returns user object with system committer user id."""
+    system_user = UserActionsInfo(feconf.SYSTEM_COMMITTER_ID)
+    return system_user
 
 
 def _save_user_settings(user_settings):
@@ -538,12 +604,17 @@ def _save_user_settings(user_settings):
         last_created_an_exploration=(
             user_settings.last_created_an_exploration),
         profile_picture_data_url=user_settings.profile_picture_data_url,
+        default_dashboard=user_settings.default_dashboard,
+        creator_dashboard_display_pref=(
+            user_settings.creator_dashboard_display_pref),
         user_bio=user_settings.user_bio,
         subject_interests=user_settings.subject_interests,
         first_contribution_msec=user_settings.first_contribution_msec,
         preferred_language_codes=user_settings.preferred_language_codes,
         preferred_site_language_code=(
-            user_settings.preferred_site_language_code)
+            user_settings.preferred_site_language_code),
+        preferred_audio_language_code=(
+            user_settings.preferred_audio_language_code)
     ).put()
 
 
@@ -611,8 +682,8 @@ def create_new_user(user_id, email, password=None):
         raise Exception('User %s already exists.' % user_id)
 
     user_settings = UserSettings(
-        user_id, email, feconf.ROLE_ID_EXPLORATION_EDITOR, password,
-        preferred_language_codes=[feconf.DEFAULT_LANGUAGE_CODE])
+        user_id, email, feconf.ROLE_ID_GUEST, password,
+        preferred_language_codes=[constants.DEFAULT_LANGUAGE_CODE])
     _save_user_settings(user_settings)
     create_user_contributions(user_id, [], [])
     return user_settings
@@ -706,6 +777,33 @@ def update_user_bio(user_id, user_bio):
     _save_user_settings(user_settings)
 
 
+def update_user_default_dashboard(user_id, default_dashboard):
+    """Updates the default dashboard of user with given user id.
+
+    Args:
+        user_id: str. The user id.
+        default_dashboard: str. The dashboard the user wants.
+    """
+    user_settings = get_user_settings(user_id, strict=True)
+    user_settings.default_dashboard = default_dashboard
+    _save_user_settings(user_settings)
+
+
+def update_user_creator_dashboard_display(
+        user_id, creator_dashboard_display_pref):
+    """Updates the creator dashboard preference of user with given user id.
+
+    Args:
+        user_id: str. The user id.
+        creator_dashboard_display_pref: str. The creator dashboard preference
+            the user wants.
+    """
+    user_settings = get_user_settings(user_id, strict=True)
+    user_settings.creator_dashboard_display_pref = (
+        creator_dashboard_display_pref)
+    _save_user_settings(user_settings)
+
+
 def update_subject_interests(user_id, subject_interests):
     """Updates subject_interests of user with given user_id.
 
@@ -791,6 +889,19 @@ def update_preferred_site_language_code(user_id, preferred_site_language_code):
         preferred_site_language_code)
     _save_user_settings(user_settings)
 
+def update_preferred_audio_language_code(
+        user_id, preferred_audio_language_code):
+    """Updates preferred_audio_language_code of user with given user_id.
+
+    Args:
+        user_id: str. The user id.
+        preferred_audio_language_code: str. New audio language preference
+            to set.
+    """
+    user_settings = get_user_settings(user_id, strict=True)
+    user_settings.preferred_audio_language_code = (
+        preferred_audio_language_code)
+    _save_user_settings(user_settings)
 
 def update_user_role(user_id, role):
     """Updates the role of the user with given user_id.
@@ -1412,3 +1523,18 @@ def update_dashboard_stats_log(user_id):
     }
     model.weekly_creator_stats_list.append(weekly_dashboard_stats)
     model.put()
+
+
+def is_at_least_moderator(user_id):
+    user_role = get_user_role_from_id(user_id)
+    if (user_role == feconf.ROLE_ID_MODERATOR or
+            user_role == feconf.ROLE_ID_ADMIN):
+        return True
+    return False
+
+
+def is_admin(user_id):
+    user_role = get_user_role_from_id(user_id)
+    if user_role == feconf.ROLE_ID_ADMIN:
+        return True
+    return False

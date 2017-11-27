@@ -28,23 +28,23 @@ oppia.directive('classifierRulePanel', [
         '/components/' +
         'classifier_panel_directive.html'),
       controller: [
-        '$scope', '$modal', 'oppiaExplorationHtmlFormatterService',
+        '$scope', '$modal', 'ExplorationHtmlFormatterService',
         'stateInteractionIdService', 'stateCustomizationArgsService',
-        'trainingModalService',
-        function($scope, $modal, oppiaExplorationHtmlFormatterService,
+        'TrainingModalService',
+        function($scope, $modal, ExplorationHtmlFormatterService,
             stateInteractionIdService, stateCustomizationArgsService,
-            trainingModalService) {
+            TrainingModalService) {
           $scope.trainingDataHtmlList = [];
           var trainingData = $scope.ruleInputs.training_data;
           for (var i = 0; i < trainingData.length; i++) {
             $scope.trainingDataHtmlList.push(
-              oppiaExplorationHtmlFormatterService.getShortAnswerHtml(
+              ExplorationHtmlFormatterService.getShortAnswerHtml(
                 trainingData[i], stateInteractionIdService.savedMemento,
                 stateCustomizationArgsService.savedMemento));
           }
 
           $scope.openRetrainAnswerModal = function(trainingDataIndex) {
-            trainingModalService.openTrainUnresolvedAnswerModal(
+            TrainingModalService.openTrainUnresolvedAnswerModal(
               trainingData[trainingDataIndex], false);
           };
         }

@@ -67,10 +67,9 @@ exports.config = {
     ],
 
     editorFeatures: [
-      'protractor/gadgetEditor.js',
-      'protractor/fallbacks.js',
       'protractor/historyTab.js',
-      'protractor/parameters.js'
+      'protractor/parameters.js',
+      'protractor/hintsAndSolutions.js'
     ],
 
     extensions: [
@@ -101,9 +100,12 @@ exports.config = {
       'protractor/cacheSlugs.js',
       'protractor/staticPagesTour.js',
       'protractor/collections.js',
-      'protractor/embedding.js',
       'protractor/accessibility.js',
       'protractor/i18n.js'
+    ],
+
+    embedding: [
+      'protractor/embedding.js'
     ]
   },
 

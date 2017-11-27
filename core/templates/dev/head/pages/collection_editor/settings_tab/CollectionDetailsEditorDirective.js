@@ -27,12 +27,12 @@ oppia.directive('collectionDetailsEditor', [
         'collection_details_editor_directive.html'),
       controller: [
         '$scope', 'CollectionEditorStateService', 'CollectionUpdateService',
-        'CollectionValidationService', 'alertsService', 'ALL_CATEGORIES',
+        'CollectionValidationService', 'AlertsService', 'ALL_CATEGORIES',
         'EVENT_COLLECTION_INITIALIZED', 'EVENT_COLLECTION_REINITIALIZED',
         'COLLECTION_TITLE_INPUT_FOCUS_LABEL',
         function(
             $scope, CollectionEditorStateService, CollectionUpdateService,
-            CollectionValidationService, alertsService, ALL_CATEGORIES,
+            CollectionValidationService, AlertsService, ALL_CATEGORIES,
             EVENT_COLLECTION_INITIALIZED, EVENT_COLLECTION_REINITIALIZED,
             COLLECTION_TITLE_INPUT_FOCUS_LABEL) {
           $scope.collection = CollectionEditorStateService.getCollection();
@@ -49,7 +49,7 @@ oppia.directive('collectionDetailsEditor', [
             }
           );
 
-          $scope.languageListForSelect = GLOBALS.ALL_LANGUAGE_CODES;
+          $scope.languageListForSelect = constants.ALL_LANGUAGE_CODES;
           $scope.TAG_REGEX = GLOBALS.TAG_REGEX;
 
           var refreshSettingsTab = function() {
@@ -115,7 +115,7 @@ oppia.directive('collectionDetailsEditor', [
               $scope.displayedCollectionTags);
             if (!CollectionValidationService.isTagValid(
                   $scope.displayedCollectionTags)) {
-              alertsService.addWarning(
+              AlertsService.addWarning(
                 'Please ensure that there are no duplicate tags and that all ' +
                 'tags contain only lower case and spaces.');
               return;

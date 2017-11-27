@@ -20,16 +20,17 @@ oppia.directive('collectionEditorNavbar', [
   'UrlInterpolationService', function(UrlInterpolationService) {
     return {
       restrict: 'E',
-      templateUrl: 'inline/collection_editor_navbar_directive',
+      templateUrl: UrlInterpolationService.getDirectiveTemplateUrl(
+        '/pages/collection_editor/collection_editor_navbar_directive.html'),
       controller: [
-        '$scope', '$modal', 'alertsService', 'routerService', 'UndoRedoService',
+        '$scope', '$modal', 'AlertsService', 'RouterService', 'UndoRedoService',
         'CollectionEditorStateService', 'CollectionValidationService',
         'CollectionRightsBackendApiService',
         'EditableCollectionBackendApiService',
         'EVENT_COLLECTION_INITIALIZED', 'EVENT_COLLECTION_REINITIALIZED',
         'EVENT_UNDO_REDO_SERVICE_CHANGE_APPLIED',
         function(
-            $scope, $modal, alertsService, routerService, UndoRedoService,
+            $scope, $modal, AlertsService, RouterService, UndoRedoService,
             CollectionEditorStateService, CollectionValidationService,
             CollectionRightsBackendApiService,
             EditableCollectionBackendApiService,
@@ -46,12 +47,12 @@ oppia.directive('collectionEditorNavbar', [
           $scope.isSaveInProgress = (
             CollectionEditorStateService.isSavingCollection);
 
-          $scope.getTabStatuses = routerService.getTabStatuses;
-          $scope.selectMainTab = routerService.navigateToMainTab;
-          $scope.selectPreviewTab = routerService.navigateToPreviewTab;
-          $scope.selectSettingsTab = routerService.navigateToSettingsTab;
-          $scope.selectStatsTab = routerService.navigateToStatsTab;
-          $scope.selectHistoryTab = routerService.navigateToHistoryTab;
+          $scope.getTabStatuses = RouterService.getTabStatuses;
+          $scope.selectMainTab = RouterService.navigateToMainTab;
+          $scope.selectPreviewTab = RouterService.navigateToPreviewTab;
+          $scope.selectSettingsTab = RouterService.navigateToSettingsTab;
+          $scope.selectStatsTab = RouterService.navigateToStatsTab;
+          $scope.selectHistoryTab = RouterService.navigateToHistoryTab;
 
           var _validateCollection = function() {
             if ($scope.collectionRights.isPrivate()) {
@@ -179,15 +180,15 @@ oppia.directive('collectionEditorNavbar', [
 
                     $scope.save = function() {
                       if (!$scope.newTitle) {
-                        alertsService.addWarning('Please specify a title');
+                        AlertsService.addWarning('Please specify a title');
                         return;
                       }
                       if (!$scope.newObjective) {
-                        alertsService.addWarning('Please specify an objective');
+                        AlertsService.addWarning('Please specify an objective');
                         return;
                       }
                       if (!$scope.newCategory) {
-                        alertsService.addWarning('Please specify a category');
+                        AlertsService.addWarning('Please specify a category');
                         return;
                       }
 
@@ -238,7 +239,7 @@ oppia.directive('collectionEditorNavbar', [
                 CollectionEditorStateService.setCollectionRights(
                   $scope.collectionRights);
               }, function() {
-                alertsService.addWarning(
+                AlertsService.addWarning(
                   'There was an error when unpublishing the collection.');
               });
           };

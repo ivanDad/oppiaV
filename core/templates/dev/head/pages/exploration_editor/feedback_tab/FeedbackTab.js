@@ -17,22 +17,22 @@
  */
 
 oppia.controller('FeedbackTab', [
-  '$scope', '$http', '$modal', '$timeout', '$rootScope', 'alertsService',
-  'oppiaDatetimeFormatter', 'threadStatusDisplayService',
-  'threadDataService', 'explorationStatesService', 'explorationData',
-  'changeListService', 'StateObjectFactory',
+  '$scope', '$http', '$modal', '$timeout', '$rootScope', 'AlertsService',
+  'oppiaDatetimeFormatter', 'ThreadStatusDisplayService',
+  'ThreadDataService', 'explorationStatesService', 'ExplorationDataService',
+  'changeListService', 'StateObjectFactory', 'UrlInterpolationService',
+  'ACTION_ACCEPT_SUGGESTION', 'ACTION_REJECT_SUGGESTION',
   function(
-    $scope, $http, $modal, $timeout, $rootScope, alertsService,
-    oppiaDatetimeFormatter, threadStatusDisplayService,
-    threadDataService, explorationStatesService, explorationData,
-    changeListService, StateObjectFactory) {
-    var ACTION_ACCEPT_SUGGESTION = 'accept';
-    var ACTION_REJECT_SUGGESTION = 'reject';
-    $scope.STATUS_CHOICES = threadStatusDisplayService.STATUS_CHOICES;
-    $scope.threadData = threadDataService.data;
-    $scope.getLabelClass = threadStatusDisplayService.getLabelClass;
+    $scope, $http, $modal, $timeout, $rootScope, AlertsService,
+    oppiaDatetimeFormatter, ThreadStatusDisplayService,
+    ThreadDataService, explorationStatesService, ExplorationDataService,
+    changeListService, StateObjectFactory, UrlInterpolationService,
+    ACTION_ACCEPT_SUGGESTION, ACTION_REJECT_SUGGESTION) {
+    $scope.STATUS_CHOICES = ThreadStatusDisplayService.STATUS_CHOICES;
+    $scope.threadData = ThreadDataService.data;
+    $scope.getLabelClass = ThreadStatusDisplayService.getLabelClass;
     $scope.getHumanReadableStatus = (
-      threadStatusDisplayService.getHumanReadableStatus);
+      ThreadStatusDisplayService.getHumanReadableStatus);
     $scope.getLocaleAbbreviatedDatetimeString = (
       oppiaDatetimeFormatter.getLocaleAbbreviatedDatetimeString);
 
@@ -56,7 +56,9 @@ oppia.controller('FeedbackTab', [
 
     $scope.showCreateThreadModal = function() {
       $modal.open({
-        templateUrl: 'modals/editorFeedbackCreateThread',
+        templateUrl: UrlInterpolationService.getDirectiveTemplateUrl(
+          '/pages/exploration_editor/feedback_tab/' +
+          'editor_create_feedback_thread_modal_directive.html'),
         backdrop: true,
         resolve: {},
         controller: ['$scope', '$modalInstance', function(
@@ -66,11 +68,11 @@ oppia.controller('FeedbackTab', [
 
           $scope.create = function(newThreadSubject, newThreadText) {
             if (!newThreadSubject) {
-              alertsService.addWarning('Please specify a thread subject.');
+              AlertsService.addWarning('Please specify a thread subject.');
               return;
             }
             if (!newThreadText) {
-              alertsService.addWarning('Please specify a message.');
+              AlertsService.addWarning('Please specify a message.');
               return;
             }
 
@@ -85,10 +87,10 @@ oppia.controller('FeedbackTab', [
           };
         }]
       }).result.then(function(result) {
-        threadDataService.createNewThread(
+        ThreadDataService.createNewThread(
           result.newThreadSubject, result.newThreadText, function() {
             $scope.clearActiveThread();
-            alertsService.addSuccessMessage('Feedback thread created.');
+            AlertsService.addSuccessMessage('Feedback thread created.');
           });
       });
     };
@@ -114,7 +116,9 @@ oppia.controller('FeedbackTab', [
     // TODO(Allan): Implement ability to edit suggestions before applying.
     $scope.showSuggestionModal = function() {
       $modal.open({
-        templateUrl: 'modals/editorViewSuggestion',
+        templateUrl: UrlInterpolationService.getDirectiveTemplateUrl(
+          '/pages/exploration_editor/feedback_tab/' +
+          'editor_view_suggestion_modal_directive.html'),
         backdrop: true,
         size: 'lg',
         resolve: {
@@ -136,10 +140,10 @@ oppia.controller('FeedbackTab', [
           currentContent: function() {
             var state = explorationStatesService.getState(
               $scope.activeThread.suggestion.state_name);
-            return state !== undefined ? state.content[0].value : null;
+            return state !== undefined ? state.content.getHtml() : null;
           },
           newContent: function() {
-            return $scope.activeThread.suggestion.state_content.value;
+            return $scope.activeThread.suggestion.suggestion_html;
           }
         },
         controller: [
@@ -185,7 +189,14 @@ oppia.controller('FeedbackTab', [
             $scope.acceptSuggestion = function() {
               $modalInstance.close({
                 action: ACTION_ACCEPT_SUGGESTION,
-                commitMessage: $scope.commitMessage
+                commitMessage: $scope.commitMessage,
+                // TODO(sll): If audio files exist for the content being
+                // replaced, implement functionality in the modal for the
+                // exploration creator to indicate whether this change
+                // requires the corresponding audio subtitles to be updated.
+                // For now, we default to assuming that the changes are
+                // sufficiently small as to warrant no updates.
+                audioUpdateRequired: false
               });
             };
 
@@ -201,21 +212,25 @@ oppia.controller('FeedbackTab', [
           }
         ]
       }).result.then(function(result) {
-        threadDataService.resolveSuggestion(
+        ThreadDataService.resolveSuggestion(
           $scope.activeThread.thread_id, result.action, result.commitMessage,
+          result.audioUpdateRequired,
           function() {
-            threadDataService.fetchThreads(function() {
+            ThreadDataService.fetchThreads(function() {
               $scope.setActiveThread($scope.activeThread.thread_id);
             });
             // Immediately update editor to reflect accepted suggestion.
             if (result.action === ACTION_ACCEPT_SUGGESTION) {
               var suggestion = $scope.activeThread.suggestion;
               var stateName = suggestion.state_name;
-              var stateDict = explorationData.data.states[stateName];
+              var stateDict = ExplorationDataService.data.states[stateName];
               var state = StateObjectFactory.createFromBackendDict(
                 stateName, stateDict);
-              state.content[0].value = suggestion.state_content.value;
-              explorationData.data.version += 1;
+              state.content.setHtml(suggestion.suggestion_html);
+              if (result.audioUpdateRequired) {
+                state.content.markAllAudioAsNeedingUpdate();
+              }
+              ExplorationDataService.data.version += 1;
               explorationStatesService.setState(stateName, state);
               $rootScope.$broadcast('refreshVersionHistory', {
                 forceRefresh: true
@@ -230,16 +245,16 @@ oppia.controller('FeedbackTab', [
 
     $scope.addNewMessage = function(threadId, tmpText, tmpStatus) {
       if (threadId === null) {
-        alertsService.addWarning('Cannot add message to thread with ID: null.');
+        AlertsService.addWarning('Cannot add message to thread with ID: null.');
         return;
       }
       if (!tmpStatus) {
-        alertsService.addWarning('Invalid message status: ' + tmpStatus);
+        AlertsService.addWarning('Invalid message status: ' + tmpStatus);
         return;
       }
 
       $scope.messageSendingInProgress = true;
-      threadDataService.addNewMessage(threadId, tmpText, tmpStatus, function() {
+      ThreadDataService.addNewMessage(threadId, tmpText, tmpStatus, function() {
         _resetTmpMessageFields();
         $scope.messageSendingInProgress = false;
       }, function() {
@@ -248,8 +263,8 @@ oppia.controller('FeedbackTab', [
     };
 
     $scope.setActiveThread = function(threadId) {
-      threadDataService.fetchMessages(threadId);
-      threadDataService.markThreadAsSeen(threadId);
+      ThreadDataService.fetchMessages(threadId);
+      ThreadDataService.markThreadAsSeen(threadId);
 
       var allThreads = [].concat(
         $scope.threadData.feedbackThreads, $scope.threadData.suggestionThreads);
@@ -265,8 +280,8 @@ oppia.controller('FeedbackTab', [
 
     // Initial load of the thread list on page load.
     $scope.clearActiveThread();
-    threadDataService.fetchFeedbackStats();
-    threadDataService.fetchThreads(function() {
+    ThreadDataService.fetchFeedbackStats();
+    ThreadDataService.fetchThreads(function() {
       $timeout(function() {
         $rootScope.loadingMessage = '';
       }, 500);

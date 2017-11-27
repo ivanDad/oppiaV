@@ -38,19 +38,18 @@ describe('Read only exploration backend API service', function() {
       exploration_id: '0',
       is_logged_in: true,
       session_id: 'KERH',
-      exploration: { 
+      exploration: {
         init_state_name: 'Introduction',
         states: {
           Introduction: {
             param_changes: [],
-            content: [{
-              type: 'text',
-              value: ''
-            }],
+            content: {
+              html: '',
+              audio_translations: {}
+            },
             unresolved_answers: {},
             interaction: {
               customization_args: {},
-              fallbacks: [],
               answer_groups: [],
               default_outcome: {
                 param_changes: [],
@@ -63,7 +62,8 @@ describe('Read only exploration backend API service', function() {
           }
         }
       },
-      version: 1
+      version: 1,
+      state_classifier_mapping: {}
     };
   }));
 

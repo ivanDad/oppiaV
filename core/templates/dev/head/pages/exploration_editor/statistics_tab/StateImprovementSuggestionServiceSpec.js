@@ -31,10 +31,10 @@ describe('StateImprovementSuggestionService', function() {
     //A self-looping state
     var statesDict1 = {
       state: {
-        content: [{
-          type: 'text',
-          value: 'content'
-        }],
+        content: {
+          html: 'content',
+          audio_translations: {}
+        },
         interaction: {
           id: 'RuleTest',
           answer_groups: [{
@@ -56,7 +56,6 @@ describe('StateImprovementSuggestionService', function() {
             feedback: [],
             param_changes: []
           },
-          fallbacks: [],
           hints: []
         },
         param_changes: []
@@ -66,10 +65,10 @@ describe('StateImprovementSuggestionService', function() {
     // A non-looping state
     var statesDict2 = {
       initial: {
-        content: [{
-          type: 'text',
-          value: 'content'
-        }],
+        content: {
+          html: 'content',
+          audio_translations: {}
+        },
         interaction: {
           id: 'RuleTest',
           answer_groups: [{
@@ -91,16 +90,15 @@ describe('StateImprovementSuggestionService', function() {
             feedback: [],
             param_changes: []
           },
-          fallbacks: [],
           hints: []
         },
         param_changes: []
       },
       end: {
-        content: [{
-          type: 'text',
-          value: 'content'
-        }],
+        content: {
+          html: 'content',
+          audio_translations: {}
+        },
         interaction: {
           id: 'RuleTest',
           answer_groups: [{
@@ -122,7 +120,6 @@ describe('StateImprovementSuggestionService', function() {
             feedback: [],
             param_changes: []
           },
-          fallbacks: [],
           hints: []
         },
         param_changes: []
@@ -132,10 +129,10 @@ describe('StateImprovementSuggestionService', function() {
     // 2 states that are both self-looping
     var statesDict3 = {
       'State 1': {
-        content: [{
-          type: 'text',
-          value: 'content'
-        }],
+        content: {
+          html: 'content',
+          audio_translations: {}
+        },
         interaction: {
           id: 'RuleTest',
           answer_groups: [{
@@ -157,16 +154,15 @@ describe('StateImprovementSuggestionService', function() {
             feedback: [],
             param_changes: []
           },
-          fallbacks: [],
           hints: []
         },
         param_changes: []
       },
       'State 2': {
-        content: [{
-          type: 'text',
-          value: 'content'
-        }],
+        content: {
+          html: 'content',
+          audio_translations: {}
+        },
         interaction: {
           id: 'RuleTest',
           answer_groups: [{
@@ -188,7 +184,6 @@ describe('StateImprovementSuggestionService', function() {
             feedback: [],
             param_changes: []
           },
-          fallbacks: [],
           hints: []
         },
         param_changes: []

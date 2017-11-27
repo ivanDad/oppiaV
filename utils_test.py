@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import copy
 import datetime
 
 # pylint: disable=relative-import
@@ -184,16 +185,13 @@ class UtilsTests(test_utils.GenericTestBase):
     def test_get_thumbnail_icon_url_for_category(self):
         self.assertEqual(
             utils.get_thumbnail_icon_url_for_category('Architecture'),
-            '%s/assets/images/subjects/Architecture.svg'
-            % utils.get_asset_dir_prefix())
+            '/subjects/Architecture.svg')
         self.assertEqual(
             utils.get_thumbnail_icon_url_for_category('Graph Theory'),
-            '%s/assets/images/subjects/GraphTheory.svg'
-            % utils.get_asset_dir_prefix())
+            '/subjects/GraphTheory.svg')
         self.assertEqual(
             utils.get_thumbnail_icon_url_for_category('Nonexistent'),
-            '%s/assets/images/subjects/Lightbulb.svg'
-            % utils.get_asset_dir_prefix())
+            '/subjects/Lightbulb.svg')
 
     def test_get_asset_dir_prefix_returns_correct_slug(self):
 
@@ -221,3 +219,23 @@ class UtilsTests(test_utils.GenericTestBase):
             self.assertFalse(utils.are_datetimes_close(
                 datetime.datetime(2016, 12, 1, 0, 0, 3),
                 initial_time))
+
+    def test_convert_to_str(self):
+        string1 = 'Home'
+        string2 = u'Лорем'
+        self.assertEqual(utils.convert_to_str(string1), string1)
+        self.assertEqual(utils.convert_to_str(string2), string2.encode('utf-8'))
+
+    def test_get_hashable_value(self):
+        json1 = ['foo', 'bar', {'baz': 3}]
+        json2 = ['fee', {'fie': ['foe', 'fum']}]
+        json1_deepcopy = copy.deepcopy(json1)
+        json2_deepcopy = copy.deepcopy(json2)
+
+        test_set = {utils.get_hashable_value(json1)}
+        self.assertIn(utils.get_hashable_value(json1_deepcopy), test_set)
+        test_set.add(utils.get_hashable_value(json2))
+        self.assertEqual(test_set, {
+            utils.get_hashable_value(json1_deepcopy),
+            utils.get_hashable_value(json2_deepcopy),
+        })

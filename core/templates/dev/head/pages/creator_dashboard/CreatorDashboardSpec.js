@@ -27,7 +27,7 @@ describe('Creator dashboard controller', function() {
         id: 'featured_exp_id',
         num_open_threads: 2,
         num_total_threads: 3,
-        status: 'publicized',
+        status: 'public',
         title: 'Featured exploration'
       }, {
         category: 'Private category',
@@ -77,7 +77,7 @@ describe('Creator dashboard controller', function() {
         scope = $rootScope.$new();
         ctrl = $controller('CreatorDashboard', {
           $scope: scope,
-          alertsService: null,
+          AlertsService: null,
           CreatorDashboardBackendApiService: mockDashboardBackendApiService
         });
       }

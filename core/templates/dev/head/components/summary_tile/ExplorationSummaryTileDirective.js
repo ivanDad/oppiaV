@@ -43,7 +43,10 @@ oppia.directive('explorationSummaryTile', [
         // version of the summary tile is displayed. This attribute is optional:
         // if it is not specified, it is treated as 0, which means that the
         // desktop version of the summary tile is always displayed.
-        mobileCutoffPx: '@mobileCutoffPx'
+        mobileCutoffPx: '@mobileCutoffPx',
+        isPlaylistTile: '&isPlaylistTile',
+        showLearnerDashboardIconsIfPossible: (
+          '&showLearnerDashboardIconsIfPossible')
       },
       templateUrl: UrlInterpolationService.getDirectiveTemplateUrl(
         '/components/summary_tile/' +
@@ -77,11 +80,14 @@ oppia.directive('explorationSummaryTile', [
       controller: [
         '$scope', '$http',
         'oppiaDatetimeFormatter', 'RatingComputationService',
-        'windowDimensionsService',
+        'WindowDimensionsService',
         function(
           $scope, $http,
           oppiaDatetimeFormatter, RatingComputationService,
-          windowDimensionsService) {
+          WindowDimensionsService) {
+          $scope.userIsLoggedIn = GLOBALS.userIsLoggedIn;
+          $scope.ACTIVITY_TYPE_EXPLORATION = (
+            constants.ACTIVITY_TYPE_EXPLORATION);
           var contributorsSummary = $scope.getContributorsSummary() || {};
           $scope.contributors = Object.keys(
             contributorsSummary).sort(
@@ -111,6 +117,10 @@ oppia.directive('explorationSummaryTile', [
           }
 
           $scope.MAX_AVATARS_TO_DISPLAY = 5;
+
+          $scope.setHoverState = function(hoverState) {
+            $scope.explorationIsCurrentlyHoveredOver = hoverState;
+          };
 
           $scope.getAverageRating = function() {
             if (!$scope.getRatings()) {
@@ -144,13 +154,18 @@ oppia.directive('explorationSummaryTile', [
             $scope.mobileCutoffPx = 0;
           }
           $scope.isWindowLarge = (
-            windowDimensionsService.getWidth() >= $scope.mobileCutoffPx);
+            WindowDimensionsService.getWidth() >= $scope.mobileCutoffPx);
 
-          windowDimensionsService.registerOnResizeHook(function() {
+          WindowDimensionsService.registerOnResizeHook(function() {
             $scope.isWindowLarge = (
-              windowDimensionsService.getWidth() >= $scope.mobileCutoffPx);
+              WindowDimensionsService.getWidth() >= $scope.mobileCutoffPx);
             $scope.$apply();
           });
+
+          $scope.getCompleteThumbnailIconUrl = function () {
+            return UrlInterpolationService.getStaticImageUrl(
+              $scope.getThumbnailIconUrl());
+          };
         }
       ]
     };

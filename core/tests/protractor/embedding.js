@@ -19,26 +19,25 @@
 var forms = require('../protractor_utils/forms.js');
 var general = require('../protractor_utils/general.js');
 var users = require('../protractor_utils/users.js');
-var admin = require('../protractor_utils/admin.js');
+var AdminPage = require('../protractor_utils/AdminPage.js');
 var editor = require('../protractor_utils/editor.js');
 var player = require('../protractor_utils/player.js');
 
 describe('Embedding', function() {
+  var adminPage = null;
+  
+  beforeEach(function() {
+    adminPage = new AdminPage.AdminPage();
+  });
+
   it('should display and play embedded explorations', function() {
     var TEST_PAGES = [{
       filename: 'embedding_tests_dev_0.0.1.min.html',
       isVersion1: true
     }, {
-      filename: 'embedding_tests_jsdelivr_0.0.1.min.html',
-      isVersion1: true
-    }, {
       filename: 'embedding_tests_dev_0.0.2.min.html',
       isVersion1: false
     }];
-
-    // The length of time the page waits before confirming an exploration
-    // cannot be loaded.
-    var LOADING_TIMEOUT = 10000;
 
     var playCountingExploration = function(version) {
       general.waitForSystem();
@@ -69,7 +68,7 @@ describe('Embedding', function() {
 
     users.createUser('user1@embedding.com', 'user1Embedding');
     users.login('user1@embedding.com', true);
-    admin.reloadExploration('protractor_test_1.yaml');
+    adminPage.reloadExploration('protractor_test_1.yaml');
 
     general.openEditor('12');
     editor.setContent(forms.toRichText('Version 2'));
@@ -103,29 +102,6 @@ describe('Embedding', function() {
           by.xpath("//div[@class='protractor-test-old-version']/iframe")));
       playCountingExploration(1);
       browser.switchTo().defaultContent();
-
-      if (TEST_PAGES[i].isVersion1) {
-        // Tests of failed loading (old version)
-        var missingIdElement = driver.findElement(
-          by.xpath("//div[@class='protractor-test-missing-id']/div/span"));
-        expect(missingIdElement.getText()).toMatch(
-          'This Oppia exploration could not be loaded because no oppia-id ' +
-          'attribute was specified in the HTML tag.');
-        var buttonXPath = '/oppia/div/button';
-        driver.findElement(
-          by.xpath(
-            "//div[@class='protractor-test-invalid-id-deferred']" + buttonXPath
-          )).click();
-        browser.sleep(LOADING_TIMEOUT);
-        expect(
-          driver.findElement(
-            by.xpath("//div[@class='protractor-test-invalid-id']/div/div/span")
-          ).getText()).toMatch('This exploration could not be loaded.');
-        expect(
-          driver.findElement(
-            by.xpath("//div[@class='protractor-test-invalid-id']/div/div/span")
-          ).getText()).toMatch('This exploration could not be loaded.');
-      }
     }
 
     // Certain events in the exploration playthroughs should trigger hook
@@ -193,7 +169,7 @@ describe('Embedding', function() {
 
     users.createUser('embedder2@example.com', 'Embedder2');
     users.login('embedder2@example.com', true);
-    admin.reloadExploration('protractor_test_1.yaml');
+    adminPage.reloadExploration('protractor_test_1.yaml');
 
     // Change language to Thai, which is not a supported site language.
     general.openEditor('12');

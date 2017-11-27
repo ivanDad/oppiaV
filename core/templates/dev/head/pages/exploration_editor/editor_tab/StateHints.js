@@ -17,27 +17,28 @@
  */
 
 oppia.controller('StateHints', [
-  '$scope', '$rootScope', '$modal', '$filter', 'editorContextService',
-  'ENABLE_HINT_EDITOR', 'alertsService', 'INTERACTION_SPECS',
-  'stateHintsService', 'explorationStatesService', 'stateInteractionIdService',
-  'UrlInterpolationService', 'HintObjectFactory',
+  '$scope', '$rootScope', '$modal', '$filter', 'EditorStateService',
+  'AlertsService', 'INTERACTION_SPECS', 'stateHintsService',
+  'explorationStatesService', 'stateInteractionIdService',
+  'UrlInterpolationService', 'HintObjectFactory', 'ExplorationPlayerService',
+  'stateSolutionService',
   function(
-    $scope, $rootScope, $modal, $filter, editorContextService,
-    ENABLE_HINT_EDITOR, alertsService, INTERACTION_SPECS,
-    stateHintsService, explorationStatesService, stateInteractionIdService,
-    UrlInterpolationService, HintObjectFactory) {
-    $scope.editorContextService = editorContextService;
+    $scope, $rootScope, $modal, $filter, EditorStateService,
+    AlertsService, INTERACTION_SPECS, stateHintsService,
+    explorationStatesService, stateInteractionIdService,
+    UrlInterpolationService, HintObjectFactory, ExplorationPlayerService,
+    stateSolutionService) {
+    $scope.EditorStateService = EditorStateService;
     $scope.stateHintsService = stateHintsService;
     $scope.activeHintIndex = null;
+    $scope.isLoggedIn = ExplorationPlayerService.isLoggedIn();
 
     $scope.dragDotsImgUrl = UrlInterpolationService.getStaticImageUrl(
       '/general/drag_dots.png');
 
-    $scope.isHintEditorEnabled = ENABLE_HINT_EDITOR;
-
     $scope.$on('stateEditorInitialized', function(evt, stateData) {
       stateHintsService.init(
-        editorContextService.getActiveStateName(),
+        EditorStateService.getActiveStateName(),
           stateData.interaction.hints);
 
       $scope.activeHintIndex = null;
@@ -51,7 +52,20 @@ oppia.controller('StateHints', [
     };
 
     $scope.changeActiveHintIndex = function(newIndex) {
-    // If the current hint is being clicked on again, close it.
+      var currentActiveIndex = $scope.activeHintIndex;
+      if (currentActiveIndex !== null && (
+          !stateHintsService.displayed[currentActiveIndex].hintText)) {
+        if (stateSolutionService.savedMemento &&
+          stateHintsService.displayed.length === 1) {
+          openDeleteLastHintModal();
+          return;
+        } else {
+          AlertsService.addInfoMessage('Deleting empty hint.');
+          stateHintsService.displayed.splice(currentActiveIndex, 1);
+          stateHintsService.saveDisplayedValue();
+        }
+      }
+      // If the current hint is being clicked on again, close it.
       if (newIndex === $scope.activeHintIndex) {
         $scope.activeHintIndex = null;
       } else {
@@ -66,15 +80,17 @@ oppia.controller('StateHints', [
     };
 
     $scope.openAddHintModal = function() {
-      alertsService.clearWarnings();
+      AlertsService.clearWarnings();
       $rootScope.$broadcast('externalSave');
 
       $modal.open({
-        templateUrl: 'modals/addHint',
-        backdrop: true,
+        templateUrl: UrlInterpolationService.getDirectiveTemplateUrl(
+          '/pages/exploration_editor/editor_tab/' +
+          'add_hint_modal_directive.html'),
+        backdrop: 'static',
         controller: [
-          '$scope', '$modalInstance', 'editorContextService',
-          function($scope, $modalInstance, editorContextService) {
+          '$scope', '$modalInstance', 'EditorStateService',
+          function($scope, $modalInstance, EditorStateService) {
             $scope.HINT_FORM_SCHEMA = {
               type: 'html',
               ui_config: {}
@@ -96,7 +112,7 @@ oppia.controller('StateHints', [
 
             $scope.cancel = function() {
               $modalInstance.dismiss('cancel');
-              alertsService.clearWarnings();
+              AlertsService.clearWarnings();
             };
           }
         ]
@@ -127,14 +143,45 @@ oppia.controller('StateHints', [
       }
     };
 
+    var openDeleteLastHintModal = function() {
+      AlertsService.clearWarnings();
+
+      $modal.open({
+        templateUrl: UrlInterpolationService.getDirectiveTemplateUrl(
+          '/pages/exploration_editor/editor_tab/' +
+          'delete_last_hint_modal_directive.html'),
+        backdrop: true,
+        controller: [
+          '$scope', '$modalInstance',
+          function($scope, $modalInstance) {
+            $scope.deleteBothSolutionAndHint = function() {
+              $modalInstance.close();
+            };
+
+            $scope.cancel = function() {
+              $modalInstance.dismiss('cancel');
+              AlertsService.clearWarnings();
+            };
+          }
+        ]
+      }).result.then(function() {
+        stateSolutionService.displayed = null;
+        stateSolutionService.saveDisplayedValue();
+        stateHintsService.displayed = [];
+        stateHintsService.saveDisplayedValue();
+      });
+    };
+
     $scope.deleteHint = function(index, evt) {
       // Prevent clicking on the delete button from also toggling the display
-      // state of the answer group.
+      // state of the hint.
       evt.stopPropagation();
 
-      alertsService.clearWarnings();
+      AlertsService.clearWarnings();
       $modal.open({
-        templateUrl: 'modals/deleteHint',
+        templateUrl: UrlInterpolationService.getDirectiveTemplateUrl(
+          '/pages/exploration_editor/editor_tab/' +
+          'delete_hint_modal_directive.html'),
         backdrop: true,
         controller: [
           '$scope', '$modalInstance', function($scope, $modalInstance) {
@@ -144,17 +191,22 @@ oppia.controller('StateHints', [
 
             $scope.cancel = function() {
               $modalInstance.dismiss('cancel');
-              alertsService.clearWarnings();
+              AlertsService.clearWarnings();
             };
           }
         ]
       }).result.then(function() {
-        stateHintsService.displayed.splice(index, 1);
-        stateHintsService.saveDisplayedValue();
+        if (stateSolutionService.savedMemento &&
+          stateHintsService.savedMemento.length === 1) {
+          openDeleteLastHintModal();
+        } else {
+          stateHintsService.displayed.splice(index, 1);
+          stateHintsService.saveDisplayedValue();
+        }
       });
     };
 
-    $scope.onComponentSave = function() {
+    $scope.onSaveInlineHint = function() {
       stateHintsService.saveDisplayedValue();
     };
   }

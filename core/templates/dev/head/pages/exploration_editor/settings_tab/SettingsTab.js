@@ -17,27 +17,31 @@
  */
 
 oppia.controller('SettingsTab', [
-  '$scope', '$http', '$window', '$modal', '$rootScope',
-  'explorationData', 'explorationTitleService', 'explorationCategoryService',
+  '$scope', '$http', '$window', '$modal',
+  '$rootScope', 'ExplorationDataService',
+  'explorationTitleService', 'explorationCategoryService',
   'explorationObjectiveService', 'explorationLanguageCodeService',
   'explorationTagsService', 'explorationRightsService',
   'explorationInitStateNameService', 'explorationParamSpecsService',
-  'changeListService', 'alertsService', 'explorationStatesService',
+  'changeListService', 'AlertsService', 'explorationStatesService',
   'explorationParamChangesService', 'explorationWarningsService',
-  'explorationAdvancedFeaturesService', 'ALL_CATEGORIES',
+  'ExplorationAdvancedFeaturesService', 'ALL_CATEGORIES',
   'EXPLORATION_TITLE_INPUT_FOCUS_LABEL', 'UserEmailPreferencesService',
   'EditableExplorationBackendApiService', 'UrlInterpolationService',
+  'explorationAutomaticTextToSpeechService',
   function(
-      $scope, $http, $window, $modal, $rootScope,
-      explorationData, explorationTitleService, explorationCategoryService,
+      $scope, $http, $window, $modal,
+      $rootScope, ExplorationDataService,
+      explorationTitleService, explorationCategoryService,
       explorationObjectiveService, explorationLanguageCodeService,
       explorationTagsService, explorationRightsService,
       explorationInitStateNameService, explorationParamSpecsService,
-      changeListService, alertsService, explorationStatesService,
+      changeListService, AlertsService, explorationStatesService,
       explorationParamChangesService, explorationWarningsService,
-      explorationAdvancedFeaturesService, ALL_CATEGORIES,
+      ExplorationAdvancedFeaturesService, ALL_CATEGORIES,
       EXPLORATION_TITLE_INPUT_FOCUS_LABEL, UserEmailPreferencesService,
-      EditableExplorationBackendApiService, UrlInterpolationService) {
+      EditableExplorationBackendApiService, UrlInterpolationService,
+      explorationAutomaticTextToSpeechService) {
     $scope.EXPLORATION_TITLE_INPUT_FOCUS_LABEL = (
       EXPLORATION_TITLE_INPUT_FOCUS_LABEL);
 
@@ -74,7 +78,7 @@ oppia.controller('SettingsTab', [
       $scope.explorationParamChangesService = explorationParamChangesService;
       $scope.UserEmailPreferencesService = UserEmailPreferencesService;
 
-      explorationData.getData().then(function() {
+      ExplorationDataService.getData().then(function() {
         $scope.refreshSettingsTab();
         $scope.hasPageLoaded = true;
       });
@@ -145,7 +149,7 @@ oppia.controller('SettingsTab', [
       var newInitStateName = explorationInitStateNameService.displayed;
 
       if (!explorationStatesService.getState(newInitStateName)) {
-        alertsService.addWarning(
+        AlertsService.addWarning(
           'Invalid initial state name: ' + newInitStateName);
         explorationInitStateNameService.restoreFromMemento();
         return;
@@ -164,18 +168,14 @@ oppia.controller('SettingsTab', [
     * Methods for enabling advanced features.
     ********************************************/
     $scope.areParametersEnabled = (
-      explorationAdvancedFeaturesService.areParametersEnabled);
-    $scope.areGadgetsEnabled = (
-      explorationAdvancedFeaturesService.areGadgetsEnabled);
-    $scope.areFallbacksEnabled = (
-      explorationAdvancedFeaturesService.areFallbacksEnabled);
-
+      ExplorationAdvancedFeaturesService.areParametersEnabled);
     $scope.enableParameters = (
-      explorationAdvancedFeaturesService.enableParameters);
-    $scope.enableGadgets = (
-      explorationAdvancedFeaturesService.enableGadgets);
-    $scope.enableFallbacks = (
-      explorationAdvancedFeaturesService.enableFallbacks);
+      ExplorationAdvancedFeaturesService.enableParameters);
+
+    $scope.isAutomaticTextToSpeechEnabled = (
+      explorationAutomaticTextToSpeechService.isAutomaticTextToSpeechEnabled);
+    $scope.toggleAutomaticTextToSpeech = (
+      explorationAutomaticTextToSpeechService.toggleAutomaticTextToSpeech);
 
     /********************************************
     * Methods for rights management.
@@ -194,16 +194,13 @@ oppia.controller('SettingsTab', [
 
     $scope.editRole = function(newMemberUsername, newMemberRole) {
       $scope.closeRolesForm();
-      explorationRightsService.saveChangeToBackend({
-        new_member_username: newMemberUsername,
-        new_member_role: newMemberRole
-      });
+      explorationRightsService.saveRoleChanges(
+        newMemberUsername, newMemberRole);
     };
 
     $scope.toggleViewabilityIfPrivate = function() {
-      explorationRightsService.saveChangeToBackend({
-        viewable_if_private: !explorationRightsService.viewableIfPrivate()
-      });
+      explorationRightsService.setViewability(
+        !explorationRightsService.viewableIfPrivate());
     };
 
     /********************************************
@@ -228,9 +225,11 @@ oppia.controller('SettingsTab', [
     * Methods relating to control buttons.
     ********************************************/
     $scope.previewSummaryTile = function() {
-      alertsService.clearWarnings();
+      AlertsService.clearWarnings();
       $modal.open({
-        templateUrl: 'modals/previewSummaryTile',
+        templateUrl: UrlInterpolationService.getDirectiveTemplateUrl(
+          '/pages/exploration_editor/settings_tab/' +
+          'preview_summary_tile_modal_directive.html'),
         backdrop: true,
         controller: [
           '$scope', '$modalInstance', function($scope, $modalInstance) {
@@ -245,25 +244,24 @@ oppia.controller('SettingsTab', [
             };
             $scope.getThumbnailIconUrl = function() {
               var category = explorationCategoryService.displayed;
-              if (GLOBALS.ALL_CATEGORIES.indexOf(category) === -1) {
-                category = GLOBALS.DEFAULT_CATEGORY_ICON;
+              if (constants.ALL_CATEGORIES.indexOf(category) === -1) {
+                category = constants.DEFAULT_CATEGORY_ICON;
               }
-              return UrlInterpolationService.getStaticImageUrl(
-                '/subjects/' + category + '.svg');
+              return '/subjects/' + category + '.svg';
             };
             $scope.getThumbnailBgColor = function() {
               var category = explorationCategoryService.displayed;
-              if (!GLOBALS.CATEGORIES_TO_COLORS.hasOwnProperty(category)) {
-                var color = GLOBALS.DEFAULT_COLOR;
+              if (!constants.CATEGORIES_TO_COLORS.hasOwnProperty(category)) {
+                var color = constants.DEFAULT_COLOR;
               } else {
-                var color = GLOBALS.CATEGORIES_TO_COLORS[category];
+                var color = constants.CATEGORIES_TO_COLORS[category];
               }
               return color;
             };
 
             $scope.close = function() {
               $modalInstance.dismiss();
-              alertsService.clearWarnings();
+              AlertsService.clearWarnings();
             };
           }
         ]
@@ -271,9 +269,11 @@ oppia.controller('SettingsTab', [
     };
 
     $scope.showTransferExplorationOwnershipModal = function() {
-      alertsService.clearWarnings();
+      AlertsService.clearWarnings();
       $modal.open({
-        templateUrl: 'modals/transferExplorationOwnership',
+        templateUrl: UrlInterpolationService.getDirectiveTemplateUrl(
+          '/pages/exploration_editor/settings_tab/' +
+          'transfer_exploration_ownership_modal_directive.html'),
         backdrop: true,
         controller: [
           '$scope', '$modalInstance', function($scope, $modalInstance) {
@@ -281,22 +281,22 @@ oppia.controller('SettingsTab', [
 
             $scope.cancel = function() {
               $modalInstance.dismiss('cancel');
-              alertsService.clearWarnings();
+              AlertsService.clearWarnings();
             };
           }
         ]
       }).result.then(function() {
-        explorationRightsService.saveChangeToBackend({
-          is_community_owned: true
-        });
+        explorationRightsService.makeCommunityOwned();
       });
     };
 
     $scope.deleteExploration = function() {
-      alertsService.clearWarnings();
+      AlertsService.clearWarnings();
 
       $modal.open({
-        templateUrl: 'modals/deleteExploration',
+        templateUrl: UrlInterpolationService.getDirectiveTemplateUrl(
+          '/pages/exploration_editor/settings_tab/' +
+          'delete_exploration_modal_directive.html'),
         backdrop: true,
         controller: [
           '$scope', '$modalInstance', function($scope, $modalInstance) {
@@ -304,7 +304,7 @@ oppia.controller('SettingsTab', [
 
             $scope.cancel = function() {
               $modalInstance.dismiss('cancel');
-              alertsService.clearWarnings();
+              AlertsService.clearWarnings();
             };
           }
         ]
@@ -317,7 +317,7 @@ oppia.controller('SettingsTab', [
     };
 
     var openModalForModeratorAction = function(action) {
-      alertsService.clearWarnings();
+      AlertsService.clearWarnings();
 
       var moderatorEmailDraftUrl = '/moderatorhandler/email_draft/' + action;
 
@@ -327,7 +327,9 @@ oppia.controller('SettingsTab', [
         var draftEmailBody = response.data.draft_email_body;
 
         $modal.open({
-          templateUrl: 'modals/takeModeratorAction',
+          templateUrl: UrlInterpolationService.getDirectiveTemplateUrl(
+            '/pages/exploration_editor/settings_tab/' +
+            'take_moderator_action_modal_directive.html'),
           backdrop: true,
           resolve: {
             draftEmailBody: function() {
@@ -358,7 +360,7 @@ oppia.controller('SettingsTab', [
 
               $scope.cancel = function() {
                 $modalInstance.dismiss('cancel');
-                alertsService.clearWarnings();
+                AlertsService.clearWarnings();
               };
             }
           ]
@@ -371,20 +373,6 @@ oppia.controller('SettingsTab', [
 
     $scope.unpublishExplorationAsModerator = function() {
       openModalForModeratorAction('unpublish_exploration');
-    };
-
-    $scope.publicizeExplorationAsModerator = function() {
-      openModalForModeratorAction('publicize_exploration');
-    };
-
-    $scope.unpublicizeExplorationAsModerator = function() {
-      // TODO(sll): Migrate this and deleteExplorationAsModerator to the
-      // 'moderator action' path, and implement an option for different actions
-      // saying whether emails should be sent for these, or not. At present,
-      // we don't expect to send an email when an exploration is unpublicized.
-      explorationRightsService.saveChangeToBackend({
-        is_publicized: false
-      });
     };
 
     $scope.isExplorationLockedForEditing = function() {

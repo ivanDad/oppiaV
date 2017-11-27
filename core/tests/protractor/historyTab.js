@@ -62,11 +62,11 @@ describe('Exploration history', function() {
         highlighted: false
       },
       3: {
-        text: '- type: text',
+        text: '  audio_translations: {}',
         highlighted: false
       },
       4: {
-        text: '  value: <p>enter 6 to continue</p>',
+        text: '  html: <p>enter 6 to continue</p>',
         highlighted: true
       },
       5: {
@@ -138,26 +138,22 @@ describe('Exploration history', function() {
         highlighted: false
       },
       22: {
-        text: '  fallbacks: []',
-        highlighted: false
-      },
-      23: {
         text: '  hints: []',
         highlighted: false
       },
-      24: {
+      23: {
         text: '  id: NumericInput',
         highlighted: true
       },
-      25: {
-        text: '  solution: {}',
+      24: {
+        text: '  solution: null',
         highlighted: false
       },
-      26: {
+      25: {
         text: 'param_changes: []',
         highlighted: false
       },
-      27: {
+      26: {
         text: ' ',
         highlighted: false
       }
@@ -173,11 +169,11 @@ describe('Exploration history', function() {
         highlighted: false
       },
       3: {
-        text: '- type: text',
+        text: '  audio_translations: {}',
         highlighted: false
       },
       4: {
-        text: '  value: \'\'',
+        text: '  html: \'\'',
         highlighted: true
       },
       5: {
@@ -215,26 +211,22 @@ describe('Exploration history', function() {
         highlighted: false
       },
       13: {
-        text: '  fallbacks: []',
-        highlighted: false
-      },
-      14: {
         text: '  hints: []',
         highlighted: false
       },
-      15: {
+      14: {
         text: '  id: null',
         highlighted: true
       },
-      16: {
-        text: '  solution: {}',
+      15: {
+        text: '  solution: null',
         highlighted: false
       },
-      17: {
+      16: {
         text: 'param_changes: []',
         highlighted: false
       },
-      18: {
+      17: {
         text: ' ',
         highlighted: false
       }
@@ -243,8 +235,8 @@ describe('Exploration history', function() {
     var STATE_2_STRING =
       'classifier_model_id: null\n' +
       'content:\n' +
-      '- type: text\n' +
-      '  value: <p>this is card 2</p>\n' +
+      '  audio_translations: {}\n' +
+      '  html: <p>this is card 2</p>\n' +
       'interaction:\n' +
       '  answer_groups: []\n' +
       '  confirmed_unclassified_answers: []\n' +
@@ -255,10 +247,9 @@ describe('Exploration history', function() {
       '    dest: final card\n' +
       '    feedback: []\n' +
       '    param_changes: []\n' +
-      '  fallbacks: []\n' +
       '  hints: []\n' +
       '  id: Continue\n' +
-      '  solution: {}\n' +
+      '  solution: null\n' +
       'param_changes: []\n' +
       ' ';
 
