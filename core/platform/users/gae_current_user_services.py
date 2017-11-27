@@ -109,4 +109,3 @@ def get_current_user_password():
         return None
     else:
         return user.password()
-
