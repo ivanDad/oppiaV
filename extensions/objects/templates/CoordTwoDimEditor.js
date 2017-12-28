@@ -17,6 +17,8 @@ oppia.directive('coordTwoDimEditor', [
   function($compile, OBJECT_EDITOR_URL_PREFIX) {
     return {
       controller: ['$scope', '$timeout', function($scope, $timeout) {
+		var is_google = false;
+
         $scope.schemaLatitude = {
           type: 'float',
           validators: [{
@@ -40,18 +42,34 @@ oppia.directive('coordTwoDimEditor', [
         };
 
         var updateMarker = function(lat, lng) {
-          var latLng = new google.maps.LatLng(lat, lng);
+		  if(is_google){
+            var latLng = new google.maps.LatLng(lat, lng);
 
-          $timeout(function() {
-            if ($scope.mapMarker) {
-              $scope.mapMarker.setPosition(latLng);
-            } else {
-              $scope.mapMarker = new google.maps.Marker({
-                map: $scope.map,
-                position: latLng
-              });
-            }
-          }, 10);
+            $timeout(function() {
+              if ($scope.mapMarker) {
+                $scope.mapMarker.setPosition(latLng);
+              } else {
+                $scope.mapMarker = new google.maps.Marker({
+                  map: $scope.map,
+                  position: latLng
+                });
+              }
+            }, 10);
+		  }
+		  else{
+            var latLng = new AMap.LngLat(lng, lat);
+
+            $timeout(function() {
+              if ($scope.mapMarker) {
+                $scope.mapMarker.setPosition(latLng);
+              } else {
+                $scope.mapMarker = new AMap.Marker({
+                  map: $scope.map,
+                  position: latLng
+                });
+              }
+            }, 10);
+		  }
         };
 
         $scope.$watch('$parent.value', function(newValue, oldValue) {
@@ -75,23 +93,52 @@ oppia.directive('coordTwoDimEditor', [
         $timeout(function() {
           updateMarker($scope.$parent.value[0], $scope.$parent.value[1]);
           if ($scope.map) {
-            google.maps.event.trigger($scope.map, 'resize');
+			if(is_google){
+              google.maps.event.trigger($scope.map, 'resize');
+			}
+			else{
+              AMap.event.trigger($scope.map, 'resize');
+			}
           }
         }, 100);
-
-        $scope.mapOptions = {
-          center: new google.maps.LatLng(
-            $scope.$parent.value[0],
-            $scope.$parent.value[1]
-          ),
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-          zoom: 0
-        };
+		
+		if(is_google){
+          $scope.mapOptions = {
+            center: new google.maps.LatLng(
+              $scope.$parent.value[0],
+              $scope.$parent.value[1]
+            ),
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            zoom: 0
+          };
+		}
+		else{
+          $scope.mapOptions = {
+            center: new AMap.LngLat(
+              $scope.$parent.value[1],
+              $scope.$parent.value[0]
+            ),
+            mapTypeId: AMap.TileLayer.RoadNet,
+            zoom: 0
+          };
+		}
 
         $scope.registerClick = function($event, $params) {
-          var latLng = $params[0].latLng;
-          updateMarker(latLng.lat(), latLng.lng());
-          $scope.$parent.value = [latLng.lat(), latLng.lng()];
+          var latLng = "";//$params[0].latLng;
+		  var lat="";
+		  var lng="";
+		  if(is_google){
+		    latLng = $params[0].latLng;
+			lat = latLng.lat();
+			lng = latLng.lng();
+		  }
+		  else{
+		    latLng = $params[0].lnglat;
+			lat = latLng.lat;
+			lng = latLng.lng;
+		  }
+          updateMarker(lat, lng);
+          $scope.$parent.value = [lat, lng];
         };
       }],
       link: function(scope, element) {

@@ -30,7 +30,7 @@
 
   <!-- Updated previous version to current version of google charts
   https://developers.google.com/chart/interactive/docs/basic_load_libs#update-library-loader-code -->
-  <script type="text/javascript"  src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript"  src="http://static.vixue.com/JS/gstatic/charts/loader.js" old-src="https://www.gstatic.com/charts/loader.js"></script>
   <script type="text/javascript">
     if (window.google && window.google.charts) {
       google.charts.load('current', {packages: ['corechart']});
@@ -38,7 +38,6 @@
       throw 'error: Could not load google visualization library. Are you offline?';
     }
   </script>
-
   <style>
     html, body {
       background-color: #eee;

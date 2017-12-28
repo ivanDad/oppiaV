@@ -24,7 +24,7 @@ class InteractiveMap(base.BaseInteraction):
     description = 'Allows learners to specify a position on a world map.'
     display_mode = base.DISPLAY_MODE_SUPPLEMENTAL
     is_trainable = False
-    _dependency_ids = ['google_maps']
+    _dependency_ids = ['amap_maps'] #['google_maps']
     answer_type = 'CoordTwoDim'
     instructions = 'Click on the map'
     narrow_instructions = 'View map'
@@ -64,11 +64,18 @@ class InteractiveMap(base.BaseInteraction):
         'default_value': 0.0,
     }, {
         'name': 'zoom',
-        'description': 'Starting zoom level (0 shows the entire earth)',
+        'description': 'Starting zoom level (4 to 19)',
         'schema': {
             'type': 'float',
+            'validators': [{
+                'id': 'is_at_least',
+                'min_value': 2.0,
+            }, {
+                'id': 'is_at_most',
+                'max_value': 19.0,
+            }]
         },
-        'default_value': 0.0,
+        'default_value': 10.0,
     }]
 
     _answer_visualization_specs = [{

@@ -19,6 +19,7 @@
  * into the directive is: the name of the parameter, followed by 'With',
  * followed by the name of the arg.
  */
+var is_google = false;
 oppia.directive('oppiaInteractiveInteractiveMap', [
   'HtmlEscaperService', 'interactiveMapRulesService', function(
   HtmlEscaperService, interactiveMapRulesService) {
@@ -42,38 +43,77 @@ oppia.directive('oppiaInteractiveInteractiveMap', [
 
           $scope.mapMarkers = [];
 
-          // This is required in order to avoid the following bug:
+
+		  // This is required in order to avoid the following bug:
           //   http://stackoverflow.com/questions/18769287
           var refreshMap = function() {
             $timeout(function() {
-              google.maps.event.trigger($scope.map, 'resize');
-              $scope.map.setCenter({
-                lat: coords[0],
-                lng: coords[1]
-              });
+			  if(is_google){
+				google.maps.event.trigger($scope.map, 'resize');
+                $scope.map.setCenter({
+                  lat: coords[0],
+                  lng: coords[1]
+                });
+			  }
+			  else{
+				AMap.event.trigger($scope.map, 'resize');
+                $scope.map.setCenter({
+                  lat: coords[1],
+                  lng: coords[0]
+                });
+			  }
             }, 100);
           };
 
           var coords = $scope.coords || [0, 0];
           var zoomLevel = parseInt($scope.zoom, 10) || 0;
-          $scope.mapOptions = {
-            center: new google.maps.LatLng(coords[0], coords[1]),
-            zoom: zoomLevel,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-          };
+		  if(is_google){
+            $scope.mapOptions = {
+              center: new google.maps.LatLng(coords[0], coords[1]),
+              zoom: zoomLevel,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+		  }
+		  else{
+            $scope.mapOptions = {
+              center: new AMap.LngLat(coords[1], coords[0]),
+              zoom: zoomLevel,
+              mapTypeId: AMap.TileLayer.RoadNet
+            };
+		  }
 
           $scope.registerClick = function($event, $params) {
-            var ll = $params[0].latLng;
-            $scope.mapMarkers.push(new google.maps.Marker({
-              map: $scope.map,
-              position: ll
-            }));
+            var ll = "";
+			var lat = 0;
+			var lng = 0;
+		    if(is_google){
+              ll = $params[0].latLng;
+              $scope.mapMarkers.push(new google.maps.Marker({
+                map: $scope.map,
+                position: ll
+              }));
+			  lat = ll.lat();
+			  lng = ll.lng();
+			}
+		    else{
+              ll = $params[0].lnglat;
+              $scope.mapMarkers.push(new AMap.Marker({
+                map: $scope.map,
+                position: ll
+              }));
+			  lat = ll.lat;
+			  lng = ll.lng;
+			}
 
             $scope.onSubmit({
-              answer: [ll.lat(), ll.lng()],
+              answer: [lat, lng],
               rulesService: interactiveMapRulesService
             });
           };
+
+		  //if(is_amaps){
+			//$scope.map = new window.AMap.Map(document.getElementById("map_canvas"), {resizeEnable: true,zoom: zoomLevel,center: new AMap.LngLat(coords[1], coords[0])});
+		  //}
 
           refreshMap();
         }
@@ -91,12 +131,22 @@ oppia.directive('oppiaResponseInteractiveMap', [
       controller: ['$scope', '$attrs', function($scope, $attrs) {
         var _answer = HtmlEscaperService.escapedJsonToObj($attrs.answer);
 
-        var latLongPair = _answer[0] + ',' + _answer[1];
-        $scope.staticMapUrl =
-          'https://maps.googleapis.com/maps/api/staticmap?' +
-          'center=' + latLongPair + '&zoom=4&size=500x400' +
-          '&maptype=roadmap&visual_refresh=true&markers=color:red|' +
-          latLongPair + '&sensor=false';
+		if(is_google){
+          var latLongPair = _answer[0] + ',' + _answer[1];
+          $scope.staticMapUrl =
+            'https://maps.googleapis.com/maps/api/staticmap?' +
+            'center=' + latLongPair + '&zoom=4&size=500x400' +
+            '&maptype=roadmap&visual_refresh=true&markers=color:red|' +
+            latLongPair + '&sensor=false';
+		}
+		else{
+          var latLongPair = _answer[1] + ',' + _answer[0];
+          $scope.staticMapUrl =
+            'http://restapi.amap.com/v3/staticmap?' +
+            'location=' + latLongPair + '&zoom=4&size=500*400' +
+            '&markers=mid,red,A:' +
+            latLongPair + '&key=3ba31e01fce1b786267839e7d8cda323';
+		}
       }]
     };
   }

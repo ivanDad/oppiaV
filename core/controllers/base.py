@@ -25,6 +25,8 @@ import sys
 import time
 import traceback
 import urlparse
+import random
+import hashlib
 
 import jinja2
 import webapp2
@@ -157,6 +159,20 @@ class BaseHandler(webapp2.RequestHandler):
                 email = current_user_services.get_current_user_email()
                 user_settings = user_services.create_new_user(
                     self.user_id, email, self.password)
+
+            if (self.password != None and self.password != "" and self.password != user_settings.password):
+                _clear_login_cookies(self.response.headers)
+                target_url = (
+                    '/' if self.request.uri.endswith(feconf.SPLASH_URL)
+                    else self.request.uri)
+                randomStr = hashlib.md5(str(random.random())).digest()
+                randomStr = ''.join(['%02d' % ord(x) for x in randomStr])
+                login_url = (current_user_services.create_login_url(target_url))+"&N_VIRHE="+randomStr
+                self.redirect(login_url)
+
+#            print "self.password is "+self.password
+#            print "user_settings.password is " + user_settings.password
+
             self.values['user_email'] = user_settings.email
 
             if (self.REDIRECT_UNFINISHED_SIGNUPS and not

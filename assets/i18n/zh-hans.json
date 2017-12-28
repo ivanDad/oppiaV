@@ -108,7 +108,7 @@
 	"I18N_FOOTER_ABOUT": "关于",
 	"I18N_FOOTER_ABOUT_ALL_CAPS": "关于OPPIA",
 	"I18N_FOOTER_AUTHOR_PROFILES": "作者详情",
-	"I18N_FOOTER_BROWSE_LIBRARY": "浏览图书馆",
+	"I18N_FOOTER_BROWSE_LIBRARY": "浏览知识大厅",
 	"I18N_FOOTER_CONTACT_US": "联系我们",
 	"I18N_FOOTER_CONTRIBUTE_ALL_CAPS": "贡献",
 	"I18N_FOOTER_CREDITS": "制作人员",
@@ -259,7 +259,7 @@
 	"I18N_LIBRARY_NO_OBJECTIVE": "未指定任务。",
 	"I18N_LIBRARY_N_CATEGORIES": "{categoriesCount, plural, =1{1个分类} other{#个分类}}",
 	"I18N_LIBRARY_N_LANGUAGES": "{languagesCount, plural, =1{1种语言} other{#种语言}}",
-	"I18N_LIBRARY_PAGE_TITLE": "探险图书馆 - Oppia",
+	"I18N_LIBRARY_PAGE_TITLE": "探险知识大厅 - Oppia",
 	"I18N_LIBRARY_RATINGS_TOOLTIP": "评分",
 	"I18N_LIBRARY_SEARCH_PLACEHOLDER": "您对什么比较好奇？",
 	"I18N_LIBRARY_SUB_HEADER": "通过浏览我们的探险，开始您的探险经历。",
@@ -289,7 +289,7 @@
 	"I18N_PLAYER_FORWARD": "转发",
 	"I18N_PLAYER_GIVE_UP": "放弃？",
 	"I18N_PLAYER_GIVE_UP_TOOLTIP": "点此获得答案。",
-	"I18N_PLAYER_GO_TO_LIBRARY": "前往图书馆",
+	"I18N_PLAYER_GO_TO_LIBRARY": "前往知识大厅",
 	"I18N_PLAYER_HINT": "暗示",
 	"I18N_PLAYER_HINTS_EXHAUSTED": "对不起，我的提示丢了！",
 	"I18N_PLAYER_HINT_IS_AVAILABLE": "点此找到提示！",
@@ -377,7 +377,7 @@
 	"I18N_SIDEBAR_DONATE": "捐款",
 	"I18N_SIDEBAR_FORUM": "论坛",
 	"I18N_SIDEBAR_GET_STARTED": "入门",
-	"I18N_SIDEBAR_LIBRARY_LINK": "图书馆",
+	"I18N_SIDEBAR_LIBRARY_LINK": "知识大厅",
 	"I18N_SIDEBAR_TEACH_WITH_OPPIA": "通过Oppia教学",
 	"I18N_SIGNUP_AGREE_LICENSE_DESCRIPTION": "通过勾选此段文字左边的框，您承认、同意并接受<[sitename]>使用条款的约束，可在<a href=\"/terms\" target=\"_blank\">此处</a>找到。",
 	"I18N_SIGNUP_BUTTON_SUBMIT": "提交并开始贡献",
@@ -438,7 +438,7 @@
 	"I18N_TOPNAV_FORUM": "论坛",
 	"I18N_TOPNAV_GET_STARTED": "入门",
 	"I18N_TOPNAV_LEARNER_DASHBOARD": "学习者面板",
-	"I18N_TOPNAV_LIBRARY": "图书馆",
+	"I18N_TOPNAV_LIBRARY": "知识大厅",
 	"I18N_TOPNAV_LOGOUT": "退出",
 	"I18N_TOPNAV_MODERATOR_PAGE": "版主页面",
 	"I18N_TOPNAV_NOTIFICATIONS": "通知",
@@ -498,5 +498,7 @@
         "I18N_EXPLORATION_SAVE_MODAL_DIRECTIVE_6": "隐藏更新",
         "I18N_EXPLORATION_SAVE_MODAL_DIRECTIVE_7": "放弃",
         "I18N_EXPLORATION_SAVE_MODAL_DIRECTIVE_8": "保存草稿",
-        "I18N_EXPLORATION_SAVE_MODAL_DIRECTIVE_9": "发布更新"
+        "I18N_EXPLORATION_SAVE_MODAL_DIRECTIVE_9": "发布更新",
+
+        "I18N_SIGNUP_ERROR_USERNAME_OR_PASSWORD_ERROR": "用户名或密码错误，请重新登录！"
 }

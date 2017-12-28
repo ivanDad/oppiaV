@@ -22,6 +22,7 @@
 DEPENDENCIES_TO_ANGULAR_MODULES_DICT = {
     'codemirror': ['ui.codemirror'],
     'google_maps': ['ui.map'],
+    'amap_maps': ['ui.map'],
     'guppy': [],
     'logic_proof': [],
     'math_expressions': [],

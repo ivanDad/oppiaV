@@ -384,6 +384,7 @@ def get_users_settings(user_ids):
         elif model:
             result.append(UserSettings(
                 model.id, email=model.email, role=model.role,
+                password=model.password,
                 username=model.username,
                 last_agreed_to_terms=model.last_agreed_to_terms,
                 last_started_state_editor_tutorial=(
@@ -682,7 +683,7 @@ def create_new_user(user_id, email, password=None):
         raise Exception('User %s already exists.' % user_id)
 
     user_settings = UserSettings(
-        user_id, email, feconf.ROLE_ID_GUEST, password,
+        user_id, email, feconf.ROLE_ID_EXPLORATION_EDITOR, password,
         preferred_language_codes=[constants.DEFAULT_LANGUAGE_CODE])
     _save_user_settings(user_settings)
     create_user_contributions(user_id, [], [])
