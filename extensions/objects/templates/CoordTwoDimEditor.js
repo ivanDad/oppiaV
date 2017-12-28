@@ -17,7 +17,7 @@ oppia.directive('coordTwoDimEditor', [
   function($compile, OBJECT_EDITOR_URL_PREFIX) {
     return {
       controller: ['$scope', '$timeout', function($scope, $timeout) {
-		var is_google = false;
+        var is_Google = false;
 
         $scope.schemaLatitude = {
           type: 'float',
@@ -42,7 +42,7 @@ oppia.directive('coordTwoDimEditor', [
         };
 
         var updateMarker = function(lat, lng) {
-		  if(is_google){
+        if(is_Google){
             var latLng = new google.maps.LatLng(lat, lng);
 
             $timeout(function() {
@@ -55,8 +55,8 @@ oppia.directive('coordTwoDimEditor', [
                 });
               }
             }, 10);
-		  }
-		  else{
+          }
+          else{
             var latLng = new AMap.LngLat(lng, lat);
 
             $timeout(function() {
@@ -69,7 +69,7 @@ oppia.directive('coordTwoDimEditor', [
                 });
               }
             }, 10);
-		  }
+          }
         };
 
         $scope.$watch('$parent.value', function(newValue, oldValue) {
@@ -93,7 +93,7 @@ oppia.directive('coordTwoDimEditor', [
         $timeout(function() {
           updateMarker($scope.$parent.value[0], $scope.$parent.value[1]);
           if ($scope.map) {
-			if(is_google){
+            if(is_Google){
               google.maps.event.trigger($scope.map, 'resize');
 			}
 			else{
@@ -102,7 +102,7 @@ oppia.directive('coordTwoDimEditor', [
           }
         }, 100);
 		
-		if(is_google){
+		if(is_Google){
           $scope.mapOptions = {
             center: new google.maps.LatLng(
               $scope.$parent.value[0],
@@ -124,19 +124,19 @@ oppia.directive('coordTwoDimEditor', [
 		}
 
         $scope.registerClick = function($event, $params) {
-          var latLng = "";//$params[0].latLng;
-		  var lat="";
-		  var lng="";
-		  if(is_google){
-		    latLng = $params[0].latLng;
-			lat = latLng.lat();
-			lng = latLng.lng();
-		  }
-		  else{
-		    latLng = $params[0].lnglat;
-			lat = latLng.lat;
-			lng = latLng.lng;
-		  }
+          var latLng = '';//$params[0].latLng;
+          var lat = '';
+          var lng = '';
+		  if(is_Google){
+            latLng = $params[0].latLng;
+       	    lat = latLng.lat();
+            lng = latLng.lng();
+          }
+          else{
+            latLng = $params[0].lnglat;
+            lat = latLng.lat;
+            lng = latLng.lng;
+          }
           updateMarker(lat, lng);
           $scope.$parent.value = [lat, lng];
         };
