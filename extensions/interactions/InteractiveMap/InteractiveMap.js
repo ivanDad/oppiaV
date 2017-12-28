@@ -19,7 +19,7 @@
  * into the directive is: the name of the parameter, followed by 'With',
  * followed by the name of the arg.
  */
-var is_Google = false;
+var Is_Google = false;
 oppia.directive('oppiaInteractiveInteractiveMap', [
   'HtmlEscaperService', 'interactiveMapRulesService', function(
   HtmlEscaperService, interactiveMapRulesService) {
@@ -48,7 +48,7 @@ oppia.directive('oppiaInteractiveInteractiveMap', [
           //   http://stackoverflow.com/questions/18769287
           var refreshMap = function() {
             $timeout(function() {
-              if(is_Google){
+              if(Is_Google){
                 google.maps.event.trigger($scope.map, 'resize');
                 $scope.map.setCenter({
                   lat: coords[0],
@@ -67,7 +67,7 @@ oppia.directive('oppiaInteractiveInteractiveMap', [
 
           var coords = $scope.coords || [0, 0];
           var zoomLevel = parseInt($scope.zoom, 10) || 0;
-          if(is_Google){
+          if(Is_Google){
             $scope.mapOptions = {
               center: new google.maps.LatLng(coords[0], coords[1]),
               zoom: zoomLevel,
@@ -86,7 +86,7 @@ oppia.directive('oppiaInteractiveInteractiveMap', [
             var ll = '';
             var lat = 0;
             var lng = 0;
-            if(is_Google){
+            if(Is_Google){
               ll = $params[0].latLng;
               $scope.mapMarkers.push(new google.maps.Marker({
                 map: $scope.map,
@@ -94,7 +94,7 @@ oppia.directive('oppiaInteractiveInteractiveMap', [
               }));
               lat = ll.lat();
               lng = ll.lng();
-			}
+            }
             else{
               ll = $params[0].lnglat;
               $scope.mapMarkers.push(new AMap.Marker({
@@ -111,9 +111,9 @@ oppia.directive('oppiaInteractiveInteractiveMap', [
             });
           };
 
-		  //if(is_amaps){
-			//$scope.map = new window.AMap.Map(document.getElementById("map_canvas"), {resizeEnable: true,zoom: zoomLevel,center: new AMap.LngLat(coords[1], coords[0])});
-		  //}
+          //if(is_amaps){
+            //$scope.map = new window.AMap.Map(document.getElementById("map_canvas"), {resizeEnable: true,zoom: zoomLevel,center: new AMap.LngLat(coords[1], coords[0])});
+          //}
 
           refreshMap();
         }
@@ -131,7 +131,7 @@ oppia.directive('oppiaResponseInteractiveMap', [
       controller: ['$scope', '$attrs', function($scope, $attrs) {
         var _answer = HtmlEscaperService.escapedJsonToObj($attrs.answer);
 
-        if(is_Google){
+        if(Is_Google){
           var latLongPair = _answer[0] + ',' + _answer[1];
           $scope.staticMapUrl =
             'https://maps.googleapis.com/maps/api/staticmap?' +
