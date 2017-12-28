@@ -111,8 +111,8 @@ oppia.directive('coordTwoDimEditor', [
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             zoom: 0
           };
-		}
-		else{
+        }
+        else{
           $scope.mapOptions = {
             center: new AMap.LngLat(
               $scope.$parent.value[1],
@@ -121,7 +121,7 @@ oppia.directive('coordTwoDimEditor', [
             mapTypeId: AMap.TileLayer.RoadNet,
             zoom: 0
           };
-		}
+        }
 
         $scope.registerClick = function($event, $params) {
           var latLng = '';//$params[0].latLng;
