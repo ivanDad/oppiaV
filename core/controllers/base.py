@@ -160,7 +160,7 @@ class BaseHandler(webapp2.RequestHandler):
                 user_settings = user_services.create_new_user(
                     self.user_id, email, self.password)
 
-            if (self.password != None and self.password != "" and 
+            if (self.password != None and self.password != "" and
                     self.password != user_settings.password):
                 _clear_login_cookies(self.response.headers)
                 target_url = (
