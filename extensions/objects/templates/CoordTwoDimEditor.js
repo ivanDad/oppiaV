@@ -17,7 +17,7 @@ oppia.directive('coordTwoDimEditor', [
   function($compile, OBJECT_EDITOR_URL_PREFIX) {
     return {
       controller: ['$scope', '$timeout', function($scope, $timeout) {
-        var Is_Google = false;
+        var isGoogle = false;
 
         $scope.schemaLatitude = {
           type: 'float',
@@ -42,7 +42,7 @@ oppia.directive('coordTwoDimEditor', [
         };
 
         var updateMarker = function(lat, lng) {
-          if(Is_Google){
+          if(isGoogle){
             var latLng = new google.maps.LatLng(lat, lng);
 
             $timeout(function() {
@@ -93,16 +93,16 @@ oppia.directive('coordTwoDimEditor', [
         $timeout(function() {
           updateMarker($scope.$parent.value[0], $scope.$parent.value[1]);
           if ($scope.map) {
-            if(Is_Google){
+            if(isGoogle){
               google.maps.event.trigger($scope.map, 'resize');
-			}
-			else{
+            }
+            else{
               AMap.event.trigger($scope.map, 'resize');
-			}
+            }
           }
         }, 100);
 		
-		if(Is_Google){
+        if(isGoogle){
           $scope.mapOptions = {
             center: new google.maps.LatLng(
               $scope.$parent.value[0],
@@ -127,7 +127,7 @@ oppia.directive('coordTwoDimEditor', [
           var latLng = '';//$params[0].latLng;
           var lat = '';
           var lng = '';
-		  if(Is_Google){
+          if(isGoogle){
             latLng = $params[0].latLng;
        	    lat = latLng.lat();
             lng = latLng.lng();
