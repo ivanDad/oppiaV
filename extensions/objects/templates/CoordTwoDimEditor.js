@@ -129,7 +129,7 @@ oppia.directive('coordTwoDimEditor', [
           var lng = '';
           if(isGoogle){
             latLng = $params[0].latLng;
-       	    lat = latLng.lat();
+            lat = latLng.lat();
             lng = latLng.lng();
           }
           else{
