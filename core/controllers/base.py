@@ -160,14 +160,16 @@ class BaseHandler(webapp2.RequestHandler):
                 user_settings = user_services.create_new_user(
                     self.user_id, email, self.password)
 
-            if (self.password != None and self.password != "" and self.password != user_settings.password):
+            if (self.password != None and self.password != "" and 
+                    self.password != user_settings.password):
                 _clear_login_cookies(self.response.headers)
                 target_url = (
                     '/' if self.request.uri.endswith(feconf.SPLASH_URL)
                     else self.request.uri)
                 randomStr = hashlib.md5(str(random.random())).digest()
                 randomStr = ''.join(['%02d' % ord(x) for x in randomStr])
-                login_url = (current_user_services.create_login_url(target_url))+"&N_VIRHE="+randomStr
+                login_url = (current_user_services.create_login_url(target_url))
+                login_url = login_url + "&N_VIRHE=" + randomStr
                 self.redirect(login_url)
 
 #            print "self.password is "+self.password
