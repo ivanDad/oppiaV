@@ -101,7 +101,7 @@ oppia.directive('coordTwoDimEditor', [
             }
           }
         }, 100);
-		
+
         if(isGoogle){
           $scope.mapOptions = {
             center: new google.maps.LatLng(
