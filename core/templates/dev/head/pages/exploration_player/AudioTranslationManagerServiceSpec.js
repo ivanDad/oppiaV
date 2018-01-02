@@ -26,40 +26,40 @@ describe('Audio translation manager service', function() {
 
   it('should properly initialize the current audio language when ' +
      'a preferred language is set', function() {
-    var allAudioLanguageCodesInExploration = ['hi-en', 'en', 'zh'];
-    var preferredLanguageCode = 'hi-en';
-    var explorationLanguageCode = 'hi';
+    var allAudioLanguageCodesInExploration = ['zh', 'en'];
+    var preferredLanguageCode = 'zh';
+    var explorationLanguageCode = 'zh';
     atms.init(allAudioLanguageCodesInExploration, preferredLanguageCode,
       explorationLanguageCode);
-    expect(atms.getCurrentAudioLanguageCode()).toEqual('hi-en');
+    expect(atms.getCurrentAudioLanguageCode()).toEqual('zh');
     atms.clearCurrentAudioLanguageCode();
 
-    allAudioLanguageCodesInExploration = ['hi-en', 'en'];
+    allAudioLanguageCodesInExploration = ['zh', 'en'];
     preferredLanguageCode = 'en';
-    explorationLanguageCode = 'hi';
+    explorationLanguageCode = 'zh';
     atms.init(allAudioLanguageCodesInExploration, preferredLanguageCode,
       explorationLanguageCode);
     expect(atms.getCurrentAudioLanguageCode()).toEqual('en');
     atms.clearCurrentAudioLanguageCode();
 
-    allAudioLanguageCodesInExploration = ['hi-en'];
+    allAudioLanguageCodesInExploration = ['zh'];
     preferredLanguageCode = 'en';
-    explorationLanguageCode = 'hi';
-    atms.init(['hi-en'], preferredLanguageCode,
+    explorationLanguageCode = 'zh';
+    atms.init(['zh'], preferredLanguageCode,
       explorationLanguageCode);
-    expect(atms.getCurrentAudioLanguageCode()).toEqual('hi-en');
+    expect(atms.getCurrentAudioLanguageCode()).toEqual('zh');
   });
 
   it('should initialize the current audio language when ' +
      'no preferred language is set and the exploration contains ' +
      'an audio language that is related to the exploration language',
     function() {
-      var allAudioLanguageCodesInExploration = ['hi-en', 'en'];
+      var allAudioLanguageCodesInExploration = ['zh', 'en'];
       var preferredLanguageCode = null;
       var explorationLanguageCode = 'hi';
       atms.init(allAudioLanguageCodesInExploration, preferredLanguageCode,
         explorationLanguageCode);
-      expect(atms.getCurrentAudioLanguageCode()).toEqual('hi-en');
+      expect(atms.getCurrentAudioLanguageCode()).toEqual('zh');
     }
   );
 
@@ -67,7 +67,7 @@ describe('Audio translation manager service', function() {
      'relevant language when multiple audio languages are related ' +
      'to the exploration language',
     function() {
-      var allAudioLanguageCodesInExploration = ['hi-en', 'en'];
+      var allAudioLanguageCodesInExploration = ['zh', 'en'];
       var preferredLanguageCode = null;
       var explorationLanguageCode = 'en';
       atms.init(allAudioLanguageCodesInExploration, preferredLanguageCode,
