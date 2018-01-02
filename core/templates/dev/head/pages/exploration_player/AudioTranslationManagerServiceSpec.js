@@ -26,7 +26,7 @@ describe('Audio translation manager service', function() {
 
   it('should properly initialize the current audio language when ' +
      'a preferred language is set', function() {
-    var allAudioLanguageCodesInExploration = ['hi-en', 'en'];
+    var allAudioLanguageCodesInExploration = ['hi-en', 'en', 'zh'];
     var preferredLanguageCode = 'hi-en';
     var explorationLanguageCode = 'hi';
     atms.init(allAudioLanguageCodesInExploration, preferredLanguageCode,
